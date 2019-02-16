@@ -1,16 +1,7 @@
 import axios from 'axios'
+import { Message } from 'iview'
 import store from '@/store'
-// import { Spin } from 'iview'
-const addErrorLog = errorInfo => {
-  const { statusText, status, request: { responseURL } } = errorInfo
-  let info = {
-    type: 'ajax',
-    code: status,
-    mes: statusText,
-    url: responseURL
-  }
-  if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
-}
+import { Spin } from 'iview'
 
 class HttpRequest {
   constructor (baseUrl = baseURL) {
@@ -50,8 +41,29 @@ class HttpRequest {
       const { data, status } = res
       return { data, status }
     }, error => {
-      this.destroy(url)
-      addErrorLog(error.response)
+      this.destroy(url.response)
+      if (error && error.response) {
+        switch (error.response.status) {
+          case 400:
+            Message.error(error.response.data.error.message)
+            break;
+          case 401:
+            Message.error(error.response.data.error.message)
+            store.dispatch('handleLogOut').then(() => {
+              Router.push({ name: 'login' })
+            })
+            break
+          case 403:
+            Message.error(error.response.data.error.message)
+            break
+          case 404:
+            Message.error('接口请求异常: ' + error.response.config.url + ', 请重试')
+            break
+          default:
+            Message.error('Oops, 出错啦')
+        }
+      }
+
       return Promise.reject(error)
     })
   }

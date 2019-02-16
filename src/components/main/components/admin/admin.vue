@@ -1,7 +1,7 @@
 <template>
-  <div class="user-avator-dropdown">
+  <div class="admin-avator-dropdown">
     <Dropdown @on-click="handleClick">
-      <Avatar :src="userAvator"/>
+      <Avatar :src="adminAvator"/>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
         <DropdownItem name="logout">退出登录</DropdownItem>
@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import './user.less'
+import './admin.less'
 import { mapActions } from 'vuex'
 export default {
-  name: 'User',
+  name: 'Admin',
   props: {
-    userAvator: {
+    adminAvator: {
       type: String,
       default: ''
     }

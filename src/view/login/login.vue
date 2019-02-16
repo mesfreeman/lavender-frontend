@@ -25,13 +25,16 @@ export default {
   methods: {
     ...mapActions([
       'handleLogin',
-      'getUserInfo'
+      'getLoginAdmin',
+      'getMenuInfo'
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
+        this.getLoginAdmin().then(res => {
+          this.getMenuInfo().then(res => {
+            this.$router.push({
+              name: this.$config.homeName
+            })
           })
         })
       })

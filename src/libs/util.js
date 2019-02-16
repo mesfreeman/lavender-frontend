@@ -3,15 +3,35 @@ import Cookies from 'js-cookie'
 import config from '@/config'
 import { forEach, hasOneOf, objEqual } from '@/libs/tools'
 
-export const TOKEN_KEY = 'token'
+export const TOKEN_KEY = 'adminAccessToken'
 
 export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, {expires: config.cookieExpires || 1})
+  //Cookies.set(TOKEN_KEY, token, {expires: config.cookieExpires || 1})
+  localStorage.setItem(TOKEN_KEY, token)
 }
 
 export const getToken = () => {
-  const token = Cookies.get(TOKEN_KEY)
+  //const token = Cookies.get(TOKEN_KEY)
+  const token = localStorage.getItem(TOKEN_KEY)
   if (token) return token
+  else return false
+}
+
+export const setAdmin = (admin) => {
+  localStorage.setItem('adminInfo', admin)
+}
+export const getAdmin = () => {
+  const admin = localStorage.getItem('adminInfo')
+  if (admin) return JSON.parse(admin)
+  else return false
+}
+
+export const setMenu = (menu) => {
+  localStorage.setItem('menuInfo', menu)
+}
+export const getMenu = () => {
+  const menu = localStorage.getItem('menuInfo')
+  if (menu) return JSON.parse(menu)
   else return false
 }
 

@@ -12,9 +12,9 @@
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <user :user-avator="userAvator"/>
-          <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-          <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
+          <admin :admin-name="adminInfo.nickName ? adminInfo.nickName : '' "/>
+          <!-- <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/> -->
+          <!-- <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store> -->
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>
@@ -37,7 +37,7 @@
 import SideMenu from './components/side-menu'
 import HeaderBar from './components/header-bar'
 import TagsNav from './components/tags-nav'
-import User from './components/user'
+import Admin from './components/admin'
 import Fullscreen from './components/fullscreen'
 import Language from './components/language'
 import ErrorStore from './components/error-store'
@@ -55,7 +55,7 @@ export default {
     TagsNav,
     Fullscreen,
     ErrorStore,
-    User
+    Admin
   },
   data () {
     return {
@@ -67,7 +67,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'errorCount'
+      'errorCount',
+      'adminInfo'
     ]),
     tagNavList () {
       return this.$store.state.app.tagNavList
@@ -75,8 +76,8 @@ export default {
     tagRouter () {
       return this.$store.state.app.tagRouter
     },
-    userAvator () {
-      return this.$store.state.user.avatorImgPath
+    adminName () {
+      return this.$store.state.admin.nickName
     },
     cacheList () {
       return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
