@@ -59,20 +59,20 @@ export default [
     }
   },
   {
-    path: '/multilevel',
-    name: 'multilevel',
+    path: '/contorl',
+    name: 'contorl',
     meta: {
       icon: 'md-menu',
-      title: '多级菜单'
+      title: '控制台'
     },
     component: Main,
     children: [
       {
-        path: 'level_2_1',
-        name: 'level_2_1',
+        path: 'dashboard',
+        name: '仪表盘',
         meta: {
           icon: 'md-funnel',
-          title: '二级-1'
+          title: '仪表盘'
         },
         component: () => import('@/view/multilevel/level-2-1.vue')
       },
