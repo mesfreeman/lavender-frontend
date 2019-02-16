@@ -75,7 +75,7 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getMenuInfo(state.adminAccessToken).then(res => {
-            commit('setMenus', res.data.result)
+            commit('setMenus', res.data.result.list)
             resolve(res.data)
           }).catch(err => {
             reject(err)

@@ -46,24 +46,27 @@ const showThisMenuEle = (item, access) => {
   } else return true
 }
 /**
- * @param {Array} list 通过路由列表得到菜单列表
+ * @param {Array} list 拥有权限的菜单列表
  * @returns {Array}
  */
-export const getMenuByRouter = (list, access) => {
+export const getMenuByRouter = (list) => {
   let res = []
   forEach(list, item => {
-    if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
-      let obj = {
-        icon: (item.meta && item.meta.icon) || '',
-        name: item.name,
-        meta: item.meta
+    let obj = {
+      icon: item.icon || '',
+      name: item.title,
+      meta: {
+        icon: item.icon || '',
+        title: item.title
       }
-      if ((hasChild(item) || (item.meta && item.meta.showAlways)) && showThisMenuEle(item, access)) {
-        obj.children = getMenuByRouter(item.children, access)
-      }
-      if (item.meta && item.meta.href) obj.href = item.meta.href
-      if (showThisMenuEle(item, access)) res.push(obj)
     }
+    if (hasChild(item)) {
+      obj.children = getMenuByRouter(item.children)
+    }
+    if (item.route && (item.route.indexOf('http://') > -1 || item.route.indexOf('https://') > -1)) {
+      obj.href = item.route
+    }
+    res.push(obj)
   })
   return res
 }
