@@ -39,12 +39,6 @@ export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }
 
-const showThisMenuEle = (item, access) => {
-  if (item.meta && item.meta.access && item.meta.access.length) {
-    if (hasOneOf(item.meta.access, access)) return true
-    else return false
-  } else return true
-}
 /**
  * @param {Array} list 拥有权限的菜单列表
  * @returns {Array}
