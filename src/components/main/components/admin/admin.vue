@@ -1,9 +1,11 @@
 <template>
   <div class="admin-avator-dropdown">
     <Dropdown @on-click="handleClick">
-      <Avatar :src="adminAvator"/>
+      <Icon type="ios-person" size="25" />
+      <span class="adminName">{{ adminName ? adminName : '暂无' }}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
+        <DropdownItem name="admin">个人中心</DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -16,7 +18,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'Admin',
   props: {
-    adminAvator: {
+    adminName: {
       type: String,
       default: ''
     }
@@ -32,6 +34,11 @@ export default {
             this.$router.push({
               name: 'login'
             })
+          })
+          break
+        case 'admin':
+          this.$router.push({
+            name: 'admin'
           })
           break
       }

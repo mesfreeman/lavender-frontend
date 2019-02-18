@@ -92,6 +92,24 @@ export default [
     ]
   },
   {
+    path: '/',
+    name: '_admin',
+    component: Main,
+    meta: {
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'admin',
+        name: 'admin',
+        meta: {
+          title: '个人中心'
+        },
+        component: () => import('@/view/multilevel/level-2-3.vue')
+      }
+    ]
+  },
+  {
     path: '/401',
     name: 'error_401',
     meta: {
