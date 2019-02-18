@@ -68,26 +68,19 @@ export default [
     ]
   },
   {
-    path: '/wechat',
-    name: '微信管理',
+    path: 'tool',
+    name: '扩展工具',
     component: Main,
     children: [
       {
-        path: 'tool',
-        name: '扩展工具',
-        component: parentView,
-        children: [
-          {
-            path: 'list',
-            name: '日签列表',
-            component: () => import('@/view/multilevel/level-2-3.vue')
-          },
-          {
-            path: 'add',
-            name: '添加日签',
-            component: () => import('@/view/multilevel/level-2-3.vue')
-          }
-        ]
+        path: 'list',
+        name: '日签列表',
+        component: () => import('@/view/daily/list.vue')
+      },
+      {
+        path: 'add',
+        name: '添加日签',
+        component: () => import('@/view/daily/add.vue')
       }
     ]
   },
