@@ -10,7 +10,6 @@ import parentView from '@/components/parent-view'
  *         可以传入一个回调函数，参数是当前路由对象，例子看动态路由和带参路由
  *  hideInMenu: (false) 设为true后在左侧菜单不会显示该页面选项
  *  notCache: (false) 设为true后页面不会缓存
- *  access: (null) 可访问该页面的权限数组，当前路由设置的权限会影响子路由
  *  icon: (-) 该页面在左侧菜单、面包屑和标签导航处显示的图标，如果是自定义图标，需要在图标名称前加下划线'_'
  *  beforeCloseName: (-) 设置该字段，则在关闭当前tab页时会去'@/router/before-close.js'里寻找该字段名对应的方法，作为关闭前的钩子函数
  * }
@@ -45,67 +44,50 @@ export default [
           notCache: true,
           icon: 'md-home'
         },
-        component: () => import('@/view/single-page/home')
+        component: () => import('@/view/home/home.vue')
       }
     ]
   },
   {
-    path: '',
-    name: 'doc',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
-  },
-  {
-    path: '/contorl',
-    name: 'contorl',
-    meta: {
-      icon: 'md-menu',
-      title: '控制台'
-    },
+    path: '/system',
+    name: '系统管理',
     component: Main,
     children: [
       {
-        path: 'dashboard',
-        name: '仪表盘',
-        meta: {
-          icon: 'md-funnel',
-          title: '仪表盘'
-        },
-        component: () => import('@/view/multilevel/level-2-1.vue')
-      },
-      {
-        path: 'level_2_2',
-        name: 'level_2_2',
-        meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
-        },
+        path: 'user',
+        name: '用户管理',
         component: parentView,
         children: [
           {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-3-1.vue')
+            path: 'list',
+            name: '用户列表',
+            component: () => import('@/view/multilevel/level-2-3.vue')
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    path: '/wechat',
+    name: '微信管理',
+    component: Main,
+    children: [
       {
-        path: 'level_2_3',
-        name: 'level_2_3',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-3'
-        },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        path: 'tool',
+        name: '扩展工具',
+        component: parentView,
+        children: [
+          {
+            path: 'list',
+            name: '日签列表',
+            component: () => import('@/view/multilevel/level-2-3.vue')
+          },
+          {
+            path: 'add',
+            name: '添加日签',
+            component: () => import('@/view/multilevel/level-2-3.vue')
+          }
+        ]
       }
     ]
   },

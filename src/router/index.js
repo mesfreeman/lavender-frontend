@@ -30,7 +30,7 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    if (to.meta.title) {
+    if (to.path) {
       next()
     } else {
       next({ replace: true, name: 'error_404' })
