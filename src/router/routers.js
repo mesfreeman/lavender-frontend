@@ -68,7 +68,7 @@ export default [
     ]
   },
   {
-    path: 'tool',
+    path: '/tool',
     name: '扩展工具',
     component: Main,
     children: [
