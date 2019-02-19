@@ -43,7 +43,7 @@
                   style="width: 430px"
                 ></DatePicker>
               </FormItem>
-              <FormItem label="封面图">
+              <FormItem label="封面图" prop="coverUrl">
                 <Upload
                   ref="upload"
                   type="drag"
@@ -112,6 +112,9 @@ export default {
         ],
         content: [
           { required: true, message: "内容不能为空", trigger: "blur" }
+        ],
+        coverUrl: [
+          { required: true, message: "封面图不能为空", trigger: "change" }
         ]
       }
     };
