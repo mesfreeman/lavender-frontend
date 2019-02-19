@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'iview'
 import store from '@/store'
-import { Spin } from 'iview'
+import Router from '@/router'
 
 class HttpRequest {
   constructor (baseUrl = baseURL) {

@@ -28,7 +28,7 @@
       </i-col>
       <i-col :md="24" :lg="15" style="margin-bottom: 20px;">
         <Card shadow>
-          <p slot="title">日签编辑</p>
+          <p slot="title">添加日签</p>
           <Row :gutter="20">
             <Form :model="formValidate" :label-width="80" ref="formValidate" :rules="ruleValidate">
               <FormItem label="标题" prop="title">
@@ -43,12 +43,12 @@
                   style="width: 430px"
                 ></DatePicker>
               </FormItem>
-              <FormItem label="封面图" prop="coverUrl">
+              <FormItem label="主图" prop="coverUrl">
                 <Upload
                   ref="upload"
                   type="drag"
                   action="/api/file/upload"
-                  style="width: 200px"
+                  style="width: 210px"
                   :show-upload-list="false"
                   :on-success="handleSuccess"
                   :format="['jpg','jpeg','png']"
@@ -68,6 +68,8 @@
                     ></Icon>
                   </div>
                 </Upload>
+                <Input v-model="formValidate.coverUrl" placeholder="主图地址" style="width: 210px; margin: 5px 10px 0px 0px;" />
+                <Input v-model="keyword" search @on-search="handleSearch(keyword)" placeholder="关键词" style="width: 210px; margin: 5px 10px 0px 0px;" />
               </FormItem>
               <FormItem label="内容" prop="content">
                 <Input
@@ -79,7 +81,8 @@
                 ></Input>
               </FormItem>
               <FormItem>
-                <Button type="primary" @click="handleSubmit" style="margin-left: 8px">生成日签</Button>
+                <Button type="primary" @click="handleContent" style="margin-right: 8px">采集内容</Button>
+                <Button type="primary" @click="handleSubmit">添加日签</Button>
               </FormItem>
             </Form>
           </Row>
@@ -90,16 +93,17 @@
 </template>
 
 <script>
-import { add } from "@/api/daily";
+import { add, captureCover, captureNote } from "@/api/daily";
 import qrcCover from "@/assets/images/qrc_cover.png";
 
 export default {
   data() {
     return {
       qrcCover: qrcCover,
+      keyword: "",
       formValidate: {
         title: "",
-        dailyDate: "",
+        dailyDate: new Date(),
         content: "",
         coverUrl: ""
       },
@@ -126,14 +130,29 @@ export default {
     handleSuccess(res) {
       this.formValidate.coverUrl = res.result.url;
     },
+    handleSearch(keyword) {
+      captureCover({keyword: keyword}).then(res => {
+        this.formValidate.coverUrl = res.data.result.coverUrl
+      })
+    },
+    handleContent() {
+      captureNote({}).then(res => {
+        this.formValidate.content = res.data.result.content;
+        this.formValidate.title = res.data.result.title
+        if (res.data.result.coverUrl) {
+          this.formValidate.coverUrl = res.data.result.coverUrl
+        }
+      })
+    },
     handleSubmit() {
        this.$refs.formValidate.validate((valid) => {
           if (valid) {
             add(this.formValidate).then(res => {
-              this.$Message.success('Success!');
+              // @todo 跳转到列表页面
+              this.$Message.success("日签添加成功");
             })
           } else {
-            this.$Message.error('生成失败');
+            this.$Message.error("日签添加失败");
           }
       })
     }
