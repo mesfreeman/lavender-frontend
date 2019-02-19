@@ -34,7 +34,7 @@
               <FormItem label="标题" prop="title">
                 <Input v-model="formValidate.title" style="width: 430px"/>
               </FormItem>
-              <FormItem label="日期" prop="dailyDate">
+              <FormItem label="日期">
                 <DatePicker
                   :value="formValidate.dailyDate"
                   @on-change="handleChange"
@@ -103,16 +103,13 @@ export default {
       keyword: "",
       formValidate: {
         title: "",
-        dailyDate: new Date(),
+        dailyDate: "",
         content: "",
         coverUrl: ""
       },
       ruleValidate: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" }
-        ],
-        dailyDate: [
-          { required: false, message: "日期不能为空", trigger: "change" }
         ],
         content: [
           { required: true, message: "内容不能为空", trigger: "blur" }
@@ -122,6 +119,9 @@ export default {
         ]
       }
     };
+  },
+  mounted () {
+    this.formValidate.dailyDate = this.formatDate(new Date())
   },
   methods: {
     handleChange(date) {
@@ -155,6 +155,14 @@ export default {
             this.$Message.error("日签添加失败");
           }
       })
+    },
+    formatDate (date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? '0' + m : m;
+      var d = date.getDate();
+      d = d < 10 ? ('0' + d) : d;
+      return y + '-' + m + '-' + d;
     }
   }
 };
