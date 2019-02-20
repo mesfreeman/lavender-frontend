@@ -15,28 +15,40 @@
       <Table :columns="columns" :data="tableData"/>
       <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
     </Card>
+    <Modal v-model="visible" footer-hide>
+        <img :src="imgUrl" v-if="visible" style="width: 100%;">
+    </Modal>
   </div>
 </template>
 
 <script>
-import { list } from "@/api/daily";
+import { list } from '@/api/daily'
 
 export default {
   data () {
     return {
+      visible: false,
+      imgUrl: '',
       columns: [
-        { title: 'ID', key: 'id' },
+        { title: 'ID', key: 'id', width: '70px' },
         { title: '标题', key: 'title' },
-        { title: '日期', key: 'dailyDate' },
+        { title: '日期', key: 'dailyDate', width: '100px' },
         {
           title: '封面图',
-          key: 'coverUrl' ,
+          key: 'coverUrl',
+          width: '90px',
+          align: 'center',
           render: (h, params) => {
-            return h('img', {
+            return h('Icon', {
               attrs: {
-                src: params.row.coverUrl,
-                alt: '封面图',
-                style: 'width: 30px;'
+                type: 'ios-eye',
+                size: '24'
+              },
+              on: {
+                click: () => {
+                  this.imgUrl = params.row.coverUrl
+                  this.visible = true
+                }
               }
             }, '')
           }
@@ -44,16 +56,25 @@ export default {
         {
           title: '日签图',
           key: 'dailyUrl',
+          width: '90px',
           align: 'center',
           render: (h, params) => {
-            return h('Button', {
-              attrs: {type:'primary', shape:'circle'},
-              // style: {width: '20px'}
-            }, '查看')
+            return h('Icon', {
+              attrs: {
+                type: 'ios-eye',
+                size: '24'
+              },
+              on: {
+                click: () => {
+                  this.imgUrl = params.row.dailyUrl
+                  this.visible = true
+                }
+              }
+            }, '')
           }
         },
         { title: '创建时间', key: 'createdAt' },
-        { title: '操作', key: 'action'}
+        { title: '操作', key: 'action' }
       ],
       searchItem: {
         title: '',
