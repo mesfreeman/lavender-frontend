@@ -50,17 +50,26 @@ export default [
   },
   {
     path: '/system',
-    name: '系统管理',
+    name: '/system',
+    meta: {
+      title: '系统管理'
+    },
     component: Main,
     children: [
       {
-        path: 'user',
-        name: '用户管理',
+        path: '/system/user',
+        name: '/system/user',
+        meta: {
+          title: '用户管理'
+        },
         component: parentView,
         children: [
           {
-            path: 'list',
-            name: '用户列表',
+            path: '/system/user/list',
+            name: '/system/user/list',
+            meta: {
+              title: '用户列表'
+            },
             component: () => import('@/view/multilevel/level-2-3.vue')
           }
         ]
@@ -69,22 +78,34 @@ export default [
   },
   {
     path: '/tool',
-    name: '扩展工具',
+    name: '/tool',
+    meta: {
+      title: '扩展工具'
+    },
     component: Main,
     children: [
       {
-        path: 'daily',
-        name: '日签管理',
+        path: '/tool/daily',
+        name: '/tool/daily',
+        meta: {
+          title: '日签管理'
+        },
         component: parentView,
         children: [
           {
-            path: 'list',
-            name: '日签列表',
+            path: '/tool/daily/list',
+            name: '/tool/daily/list',
+            meta: {
+              title: '日签列表'
+            },
             component: () => import('@/view/daily/list.vue')
           },
           {
-            path: 'add',
-            name: '添加日签',
+            path: '/tool/daily/add',
+            name: '/tool/daily/add',
+            meta: {
+              title: '添加日签'
+            },
             component: () => import('@/view/daily/add.vue')
           }
         ]

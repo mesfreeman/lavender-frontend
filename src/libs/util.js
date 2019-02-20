@@ -48,7 +48,7 @@ export const getMenuByRouter = (list) => {
   forEach(list, item => {
     let obj = {
       icon: item.icon || '',
-      name: item.title,
+      name: item.route || item.title,
       meta: {
         icon: item.icon || '',
         title: item.title
