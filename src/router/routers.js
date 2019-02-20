@@ -73,14 +73,21 @@ export default [
     component: Main,
     children: [
       {
-        path: 'list',
-        name: '日签列表',
-        component: () => import('@/view/daily/list.vue')
-      },
-      {
-        path: 'add',
-        name: '添加日签',
-        component: () => import('@/view/daily/add.vue')
+        path: 'daily',
+        name: '日签管理',
+        component: parentView,
+        children: [
+          {
+            path: 'list',
+            name: '日签列表',
+            component: () => import('@/view/daily/list.vue')
+          },
+          {
+            path: 'add',
+            name: '添加日签',
+            component: () => import('@/view/daily/add.vue')
+          }
+        ]
       }
     ]
   },
