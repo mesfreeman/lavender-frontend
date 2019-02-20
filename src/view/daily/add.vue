@@ -174,6 +174,7 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #fefefe;
   padding: 30px;
+  margin-left: 8px;
   font-size: 18px;
   letter-spacing: 3px;
   width: 560px;
