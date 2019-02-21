@@ -30,20 +30,28 @@ export default {
       visible: false,
       imgUrl: '',
       columns: [
-        { title: 'ID', key: 'id', width: '70px' },
-        { title: '标题', key: 'title' },
-        { title: '日期', key: 'dailyDate', width: '100px' },
+        {
+          title: 'ID',
+          key: 'id',
+          width: 70
+        },
+        {
+          title: '标题',
+          key: 'title',
+          tooltip: true
+        },
+        {
+          title: '日期',
+          key: 'dailyDate',
+        },
         {
           title: '封面图',
           key: 'coverUrl',
-          width: '90px',
+          width: 90,
           align: 'center',
           render: (h, params) => {
             return h('Icon', {
-              attrs: {
-                type: 'ios-eye',
-                size: '24'
-              },
+              attrs: {type: 'ios-eye', size: 24},
               on: {
                 click: () => {
                   this.imgUrl = params.row.coverUrl
@@ -56,14 +64,11 @@ export default {
         {
           title: '日签图',
           key: 'dailyUrl',
-          width: '90px',
+          width: 90,
           align: 'center',
           render: (h, params) => {
             return h('Icon', {
-              attrs: {
-                type: 'ios-eye',
-                size: '24'
-              },
+              attrs: {type: 'ios-eye', size: 24},
               on: {
                 click: () => {
                   this.imgUrl = params.row.dailyUrl
@@ -73,8 +78,37 @@ export default {
             }, '')
           }
         },
-        { title: '创建时间', key: 'createdAt' },
-        { title: '操作', key: 'action' }
+        {
+          title: '创建时间',
+          key: 'createdAt'
+        },
+        {
+          title: '操作',
+          align: 'center',
+          width: 150,
+          render: (h, params) => {
+            return h('ButtonGroup', {
+              attrs: {shape: 'circle'}
+            },[
+              h('Button', {
+                attrs: {type: 'primary'},
+                on: {
+                  click: () => {
+                    this.modifyItem(params.row.id)
+                  }
+                }
+              }, '修改'),
+              h('Button', {
+                attrs: {type: 'warning'},
+                on: {
+                  click: () => {
+                    console.log(params)
+                  }
+                }
+              }, '同步'),
+            ])
+          }
+        }
       ],
       searchItem: {
         title: '',
@@ -102,6 +136,9 @@ export default {
     pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
       this.loadList()
+    },
+    modifyItem (id) {
+      this.$router.push({name: '/tool/daily/modify', query: {id: id}})
     }
   }
 }

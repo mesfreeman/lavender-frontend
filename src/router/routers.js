@@ -107,6 +107,15 @@ export default [
               title: '添加日签'
             },
             component: () => import('@/view/daily/add.vue')
+          },
+          {
+            path: '/tool/daily/modify',
+            name: '/tool/daily/modify',
+            meta: {
+              title: '修改日签',
+              hideInMenu: true
+            },
+            component: () => import('@/view/daily/add.vue')
           }
         ]
       }

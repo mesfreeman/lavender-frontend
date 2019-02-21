@@ -28,7 +28,8 @@
       </i-col>
       <i-col :md="24" :lg="15" style="margin-bottom: 20px;">
         <Card shadow>
-          <p slot="title">添加日签</p>
+          <p v-if="formValidate.id" slot="title">修改日签</p>
+          <p v-else slot="title">添加日签</p>
           <Row :gutter="20">
             <Form :model="formValidate" :label-width="80" ref="formValidate" :rules="ruleValidate">
               <FormItem label="标题" prop="title">
@@ -82,7 +83,8 @@
               </FormItem>
               <FormItem>
                 <Button type="primary" @click="handleContent" style="margin-right: 8px">采集内容</Button>
-                <Button type="primary" @click="handleSubmit">添加日签</Button>
+                <Button v-if="formValidate.id" type="primary" @click="handleSubmit">修改日签</Button>
+                <Button v-else type="primary" @click="handleSubmit">添加日签</Button>
               </FormItem>
             </Form>
           </Row>
@@ -93,7 +95,7 @@
 </template>
 
 <script>
-import { add, captureCover, captureNote } from "@/api/daily";
+import { add, modify, view, captureCover, captureNote } from "@/api/daily";
 import qrcCover from "@/assets/images/qrc_cover.png";
 
 export default {
@@ -102,6 +104,7 @@ export default {
       qrcCover: qrcCover,
       keyword: "",
       formValidate: {
+        id: this.$route.query.id,
         title: "",
         dailyDate: "",
         content: "",
@@ -122,6 +125,11 @@ export default {
   },
   mounted () {
     this.formValidate.dailyDate = this.formatDate(new Date())
+    if (this.formValidate.id) {
+      view({id: this.formValidate.id}).then(res => {
+        this.formValidate = res.data.result
+      })
+    }
   },
   methods: {
     handleChange(date) {
@@ -147,10 +155,17 @@ export default {
     handleSubmit() {
        this.$refs.formValidate.validate((valid) => {
           if (valid) {
-            add(this.formValidate).then(res => {
-              // @todo 跳转到列表页面
-              this.$Message.success("日签添加成功");
-            })
+            if (this.formValidate.id) {
+              modify(this.formValidate).then(res => {
+                this.$Message.success("日签修改成功");
+                this.$router.push({name: '/tool/daily/list'})
+              })
+            } else {
+              add(this.formValidate).then(res => {
+                this.$Message.success("日签添加成功");
+                this.$router.push({name: '/tool/daily/list'})
+              })
+            }
           } else {
             this.$Message.error("日签添加失败");
           }
