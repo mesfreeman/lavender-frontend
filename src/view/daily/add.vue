@@ -82,9 +82,18 @@
                 ></Input>
               </FormItem>
               <FormItem>
-                <Button type="primary" @click="handleContent" style="margin-right: 8px">采集内容</Button>
-                <Button v-if="formValidate.id" type="primary" @click="handleSubmit">修改日签</Button>
-                <Button v-else type="primary" @click="handleSubmit">添加日签</Button>
+                <Button @click="handleContent" :loading="loading1" type="primary" style="margin-right: 8px">
+                  <span v-if="!loading1">采集内容</span>
+                  <span v-else>采集中...</span>
+                </Button>
+                <Button v-if="formValidate.id" @click="handleSubmit" :loading="loading2" type="primary">
+                  <span v-if="!loading2">修改日签</span>
+                  <span v-else>修改中...</span>
+                </Button>
+                <Button v-else @click="handleSubmit" :loading="loading2" type="primary">
+                  <span v-if="!loading2">添加日签</span>
+                  <span v-else>添加中...</span>
+                </Button>
               </FormItem>
             </Form>
           </Row>
@@ -103,6 +112,8 @@ export default {
     return {
       qrcCover: qrcCover,
       keyword: "",
+      loading1: false,
+      loading2: false,
       formValidate: {
         id: this.$route.query.id,
         title: "",
@@ -144,7 +155,10 @@ export default {
       })
     },
     handleContent() {
+      this.loading1 = true
       captureNote({}).then(res => {
+        this.$Message.success('采集成功')
+        this.loading1 = false
         this.formValidate.content = res.data.result.content;
         this.formValidate.title = res.data.result.title
         if (res.data.result.coverUrl) {
@@ -153,21 +167,24 @@ export default {
       })
     },
     handleSubmit() {
+      this.loading2 = true
        this.$refs.formValidate.validate((valid) => {
           if (valid) {
             if (this.formValidate.id) {
               modify(this.formValidate).then(res => {
-                this.$Message.success("日签修改成功");
+                this.loading2 = false
+                this.$Message.success('日签修改成功');
                 this.$router.push({name: '/tool/daily/list'})
               })
             } else {
               add(this.formValidate).then(res => {
-                this.$Message.success("日签添加成功");
+                this.loading2 = false
+                this.$Message.success('日签添加成功');
                 this.$router.push({name: '/tool/daily/list'})
               })
             }
           } else {
-            this.$Message.error("日签添加失败");
+            this.$Message.error('日签添加失败');
           }
       })
     },
