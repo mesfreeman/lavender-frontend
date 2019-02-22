@@ -3,12 +3,12 @@
     <Card>
       <Form :model="searchItem" inline>
         <FormItem>
-            <Input @keydown.native.enter.prevent ="listLoad" type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
+            <Input @keydown.native.enter.prevent ="listLoad()" type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
                 <span slot="prepend">标题</span>
             </Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" icon="ios-search" @click="listLoad">搜索</Button>
+            <Button type="primary" icon="ios-search" @click="listLoad()">搜索</Button>
         </FormItem>
       </Form>
       <p slot="title">日签列表</p>
