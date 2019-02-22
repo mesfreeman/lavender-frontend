@@ -32,6 +32,14 @@ export const view = (data) => {
   })
 }
 
+export const syncDaily = (data) => {
+  return axios.request({
+    url: '/api/manage/daily/syncDaily',
+    data: data,
+    method: 'post'
+  })
+}
+
 export const captureCover = (data) => {
   return axios.request({
     url: '/api/manage/daily/captureCover',

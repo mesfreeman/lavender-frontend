@@ -3,12 +3,12 @@
     <Card>
       <Form :model="searchItem" inline>
         <FormItem>
-            <Input @keydown.native.enter.prevent ="loadList" type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
+            <Input @keydown.native.enter.prevent ="listLoad" type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
                 <span slot="prepend">标题</span>
             </Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" icon="ios-search" @click="loadList">搜索</Button>
+            <Button type="primary" icon="ios-search" @click="listLoad">搜索</Button>
         </FormItem>
       </Form>
       <p slot="title">日签列表</p>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { list } from '@/api/daily'
+import { list, syncDaily } from '@/api/daily'
 
 export default {
   data () {
@@ -43,6 +43,7 @@ export default {
         {
           title: '日期',
           key: 'dailyDate',
+          width: 100
         },
         {
           title: '封面图',
@@ -79,6 +80,22 @@ export default {
           }
         },
         {
+          title: '状态',
+          key: 'mediaId',
+          width: 100,
+          render: (h, params) => {
+            let color = '#f29100'
+            let content = '未同步'
+            if (params.row.mediaId) {
+              color = '#2d8cf0'
+              content = '已同步'
+            }
+            return h('span', {
+              style: { color: color}
+            }, content)
+          }
+        },
+        {
           title: '创建时间',
           key: 'createdAt'
         },
@@ -100,15 +117,23 @@ export default {
               }, '修改'),
               h('Button', {
                 attrs: {type: 'warning'},
-                on: {
-                  click: () => {
-                    console.log(params)
+              }, [
+                h('Poptip', {
+                  props: {
+                    transfer: true,
+                    confirm: true,
+                    title: '你确定要同步吗?'
+                  },
+                  on: {
+                    'on-ok': () => {
+                      this.syncDailyItem(params.row.id)
+                    }
                   }
-                }
-              }, '同步'),
+                }, '同步')
+              ])
             ])
           }
-        }
+        },
       ],
       searchItem: {
         title: '',
@@ -120,25 +145,32 @@ export default {
     }
   },
   mounted () {
-    this.loadList()
+    this.listLoad()
   },
   methods: {
-    loadList () {
+    pageIndexChange (pageIndex) {
+      this.searchItem.pageIndex = pageIndex
+      this.listLoad()
+    },
+    pageSizeChange (pageSize) {
+      this.searchItem.pageSize = pageSize
+      this.listLoad()
+    },
+    listLoad () {
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
         this.tableData = res.data.result.list
       })
     },
-    pageIndexChange (pageIndex) {
-      this.searchItem.pageIndex = pageIndex
-      this.loadList()
-    },
-    pageSizeChange (pageSize) {
-      this.searchItem.pageSize = pageSize
-      this.loadList()
-    },
     modifyItem (id) {
       this.$router.push({name: '/tool/daily/modify', query: {id: id}})
+    },
+    syncDailyItem (id) {
+      const msg = this.$Message.loading({content: '同步中...', duration: 0});
+      syncDaily({id: id}).then(res => {
+        setTimeout(msg, 0);
+        this.$Message.success(res.data.result.message);
+      })
     }
   }
 }
