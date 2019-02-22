@@ -146,4 +146,8 @@ export default {
   margin-top: 10px;
   text-align: right;
 }
+.ivu-modal-body {
+  line-height: 0;
+  padding: 0;
+}
 </style>
