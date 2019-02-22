@@ -95,100 +95,107 @@
 </template>
 
 <script>
-import { add, modify, view, captureCover, captureNote } from "@/api/daily";
-import qrcCover from "@/assets/images/qrc_cover.png";
+import { add, modify, view, captureCover, captureNote } from '@/api/daily'
+import qrcCover from '@/assets/images/qrc_cover.png'
 
 export default {
-  data() {
+  data () {
     return {
       qrcCover: qrcCover,
-      keyword: "",
+      keyword: '',
       loading1: false,
       loading2: false,
       formValidate: {
         id: this.$route.query.id,
-        title: "",
-        dailyDate: "",
-        content: "",
-        coverUrl: ""
+        title: '',
+        dailyDate: '',
+        content: '',
+        coverUrl: ''
       },
       ruleValidate: {
         title: [
-          { required: true, message: "标题不能为空", trigger: "blur" }
+          { required: true, message: '标题不能为空', trigger: 'blur' }
         ],
         content: [
-          { required: true, message: "内容不能为空", trigger: "blur" }
+          { required: true, message: '内容不能为空', trigger: 'blur' }
         ],
         coverUrl: [
-          { required: true, message: "封面图不能为空", trigger: "change" }
+          { required: true, message: '封面图不能为空', trigger: 'change' }
         ]
       }
-    };
+    }
   },
   mounted () {
     this.formValidate.dailyDate = this.formatDate(new Date())
     if (this.formValidate.id) {
-      view({id: this.formValidate.id}).then(res => {
+      view({ id: this.formValidate.id }).then(res => {
         this.formValidate = res.data.result
       })
     }
   },
   methods: {
-    handleChange(date) {
+    handleChange (date) {
       this.formValidate.dailyDate = date
     },
-    handleSuccess(res) {
-      this.formValidate.coverUrl = res.result.url;
+    handleSuccess (res) {
+      this.formValidate.coverUrl = res.result.url
     },
-    handleSearch(keyword) {
-      captureCover({keyword: keyword}).then(res => {
+    handleSearch (keyword) {
+      captureCover({ keyword: keyword }).then(res => {
         this.formValidate.coverUrl = res.data.result.coverUrl
       })
     },
-    handleContent() {
+    handleContent () {
       this.loading1 = true
       captureNote({}).then(res => {
         this.$Message.success('采集成功')
         this.loading1 = false
-        this.formValidate.content = res.data.result.content;
+        this.formValidate.content = res.data.result.content
         this.formValidate.title = res.data.result.title
         if (res.data.result.coverUrl) {
           this.formValidate.coverUrl = res.data.result.coverUrl
         }
+      }).catch(err => {
+        if (err) this.loading1 = false
       })
     },
-    handleSubmit() {
+    handleSubmit () {
       this.loading2 = true
-       this.$refs.formValidate.validate((valid) => {
-          if (valid) {
-            if (this.formValidate.id) {
-              modify(this.formValidate).then(res => {
-                this.loading2 = false
-                this.$Message.success('日签修改成功');
-                this.$router.push({name: '/tool/daily/list'})
-              })
-            } else {
-              add(this.formValidate).then(res => {
-                this.loading2 = false
-                this.$Message.success('日签添加成功');
-                this.$router.push({name: '/tool/daily/list'})
-              })
-            }
+      this.$refs.formValidate.validate((valid) => {
+        if (valid) {
+          if (this.formValidate.id) {
+            modify(this.formValidate).then(res => {
+              this.loading2 = false
+              this.$Message.success('日签修改成功')
+              this.$router.push({ name: '/tool/daily/list' })
+            }).catch(err => {
+              if (err) this.loading1 = false
+            })
           } else {
-            this.$Message.error('日签添加失败');
+            add(this.formValidate).then(res => {
+              this.loading2 = false
+              this.$Message.success('日签添加成功')
+              this.$router.push({ name: '/tool/daily/list' })
+            }).catch(err => {
+              if (err) this.loading2 = false
+            })
           }
+        } else {
+          this.loading2 = false
+          this.$Message.error('日签添加失败')
+        }
       })
     },
     formatDate (date) {
-      var y = date.getFullYear();
-      var m = date.getMonth() + 1;
-      m = m < 10 ? '0' + m : m;
-      var d = date.getDate();
-      d = d < 10 ? ('0' + d) : d;
-      return y + '-' + m + '-' + d;
+      var y = date.getFullYear()
+      var m = date.getMonth() + 1
+      m = m < 10 ? '0' + m : m
+      var d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      return y + '-' + m + '-' + d
     }
   }
-};
+}
 </script>
 
 <style>

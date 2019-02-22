@@ -91,7 +91,7 @@ export default {
           slot: 'action',
           align: 'center',
           width: 170
-        },
+        }
       ],
       searchItem: {
         title: '',
@@ -114,7 +114,7 @@ export default {
       this.searchItem.pageSize = pageSize
       this.listLoad()
     },
-    imageShow (imgUrl)  {
+    imageShow (imgUrl) {
       this.imgUrl = imgUrl
       this.visible = true
     },
@@ -125,14 +125,16 @@ export default {
       })
     },
     modifyItem (id) {
-      this.$router.push({name: '/tool/daily/modify', query: {id: id}})
+      this.$router.push({ name: '/tool/daily/modify', query: { id: id } })
     },
     syncDailyItem (id, index) {
       this.loading1 = true
-      syncDaily({id: id}).then(res => {
+      syncDaily({ id: id }).then(res => {
         this.$Message.success(res.data.result.message)
         this.tableData[index].mediaId = res.data.result.mediaId
         this.loading1 = false
+      }).catch(err => {
+        if (err) this.loading1 = false
       })
     }
   }
