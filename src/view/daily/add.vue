@@ -82,18 +82,9 @@
                 ></Input>
               </FormItem>
               <FormItem>
-                <Button @click="handleContent" :loading="loading1" type="primary" style="margin-right: 8px">
-                  <span v-if="!loading1">采集内容</span>
-                  <span v-else>采集中...</span>
-                </Button>
-                <Button v-if="formValidate.id" @click="handleSubmit" :loading="loading2" type="primary">
-                  <span v-if="!loading2">修改日签</span>
-                  <span v-else>修改中...</span>
-                </Button>
-                <Button v-else @click="handleSubmit" :loading="loading2" type="primary">
-                  <span v-if="!loading2">添加日签</span>
-                  <span v-else>添加中...</span>
-                </Button>
+                <Button @click="handleContent" :loading="loading1" type="primary" style="margin-right: 8px">采集内容</Button>
+                <Button v-if="formValidate.id" @click="handleSubmit" :loading="loading2" type="primary">修改日签</Button>
+                <Button v-else @click="handleSubmit" :loading="loading2" type="primary">添加日签</Button>
               </FormItem>
             </Form>
           </Row>

@@ -12,10 +12,29 @@
         </FormItem>
       </Form>
       <p slot="title">日签列表</p>
-      <Table :columns="columns" :data="tableData"/>
+      <Table :columns="columns" :data="tableData">
+        <template slot-scope="{row}" slot="coverUrl">
+          <Icon @mouseenter.native="imageShow(row.coverUrl)" type="ios-eye" size="24"></Icon>
+        </template>
+        <template slot-scope="{row}" slot="dailyUrl">
+          <Icon @mouseenter.native="imageShow(row.dailyUrl)" type="ios-eye" size="24"></Icon>
+        </template>
+        <template slot-scope="{row}" slot="mediaId">
+          <span v-if="row.mediaId" style="color: #2d8cf0">已同步</span>
+          <span v-else style="color: #f29100">未同步</span>
+        </template>
+        <template slot-scope="{row, index}" slot="action">
+          <ButtonGroup shape="circle">
+            <Button @click="modifyItem(row.id)" type="primary">修改</Button>
+            <Button type="warning" :loading="loading1">
+              <Poptip @on-ok="syncDailyItem(row.id, index)" title="你确定要同步吗？" :transfer="true" :confirm="true">同步</Poptip>
+            </Button>
+          </ButtonGroup>
+        </template>
+      </Table>
       <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
     </Card>
-    <Modal v-model="visible" footer-hide>
+    <Modal v-model="visible" :closable="false" footer-hide>
         <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
   </div>
@@ -29,6 +48,7 @@ export default {
     return {
       visible: false,
       imgUrl: '',
+      loading1: false,
       columns: [
         {
           title: 'ID',
@@ -47,53 +67,20 @@ export default {
         },
         {
           title: '封面图',
-          key: 'coverUrl',
+          slot: 'coverUrl',
           width: 90,
-          align: 'center',
-          render: (h, params) => {
-            return h('Icon', {
-              attrs: {type: 'ios-eye', size: 24},
-              on: {
-                click: () => {
-                  this.imgUrl = params.row.coverUrl
-                  this.visible = true
-                }
-              }
-            }, '')
-          }
+          align: 'center'
         },
         {
           title: '日签图',
-          key: 'dailyUrl',
+          slot: 'dailyUrl',
           width: 90,
-          align: 'center',
-          render: (h, params) => {
-            return h('Icon', {
-              attrs: {type: 'ios-eye', size: 24},
-              on: {
-                click: () => {
-                  this.imgUrl = params.row.dailyUrl
-                  this.visible = true
-                }
-              }
-            }, '')
-          }
+          align: 'center'
         },
         {
           title: '状态',
-          key: 'mediaId',
-          width: 100,
-          render: (h, params) => {
-            let color = '#f29100'
-            let content = '未同步'
-            if (params.row.mediaId) {
-              color = '#2d8cf0'
-              content = '已同步'
-            }
-            return h('span', {
-              style: { color: color}
-            }, content)
-          }
+          slot: 'mediaId',
+          width: 100
         },
         {
           title: '创建时间',
@@ -101,38 +88,9 @@ export default {
         },
         {
           title: '操作',
+          slot: 'action',
           align: 'center',
-          width: 150,
-          render: (h, params) => {
-            return h('ButtonGroup', {
-              attrs: {shape: 'circle'}
-            },[
-              h('Button', {
-                attrs: {type: 'primary'},
-                on: {
-                  click: () => {
-                    this.modifyItem(params.row.id)
-                  }
-                }
-              }, '修改'),
-              h('Button', {
-                attrs: {type: 'warning'},
-              }, [
-                h('Poptip', {
-                  props: {
-                    transfer: true,
-                    confirm: true,
-                    title: '你确定要同步吗?'
-                  },
-                  on: {
-                    'on-ok': () => {
-                      this.syncDailyItem(params.row.id)
-                    }
-                  }
-                }, '同步')
-              ])
-            ])
-          }
+          width: 170
         },
       ],
       searchItem: {
@@ -156,6 +114,10 @@ export default {
       this.searchItem.pageSize = pageSize
       this.listLoad()
     },
+    imageShow (imgUrl)  {
+      this.imgUrl = imgUrl
+      this.visible = true
+    },
     listLoad () {
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
@@ -165,11 +127,12 @@ export default {
     modifyItem (id) {
       this.$router.push({name: '/tool/daily/modify', query: {id: id}})
     },
-    syncDailyItem (id) {
-      const msg = this.$Message.loading({content: '同步中...', duration: 0});
+    syncDailyItem (id, index) {
+      this.loading1 = true
       syncDaily({id: id}).then(res => {
-        setTimeout(msg, 0);
-        this.$Message.success(res.data.result.message);
+        this.$Message.success(res.data.result.message)
+        this.tableData[index].mediaId = res.data.result.mediaId
+        this.loading1 = false
       })
     }
   }
