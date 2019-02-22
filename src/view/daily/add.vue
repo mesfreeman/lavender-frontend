@@ -1,95 +1,89 @@
 <template>
   <div>
     <Row :gutter="20">
-      <i-col :md="24" :lg="9" style="margin-bottom: 20px;">
-        <Card shadow>
-          <p slot="title">日签预览</p>
-          <Row :gutter="20">
-            <div class="view">
-              <div class="dayCard">
-                <div class="cover">
-                  <div class="bgCover">
-                    <img v-if="formValidate.coverUrl" :src="formValidate.coverUrl">
-                  </div>
-                  <div class="qrcCover">
-                    <img :src="qrcCover">
-                  </div>
-                </div>
-                <div class="content">{{formValidate.content}}</div>
-                <div class="footer">
-                  <div class="from">From:《{{formValidate.title}}》</div>
-                  <div class="shotLine"></div>
-                  <div class="date">{{formValidate.dailyDate}}</div>
-                </div>
+      <Card shadow style="left:8px; width:560px; position:absolute;">
+        <p slot="title">日签预览</p>
+        <div class="view">
+          <div class="dayCard">
+            <div class="cover">
+              <div class="bgCover">
+                <img v-if="formValidate.coverUrl" :src="formValidate.coverUrl">
+              </div>
+              <div class="qrcCover">
+                <img :src="qrcCover">
               </div>
             </div>
-          </Row>
-        </Card>
-      </i-col>
-      <i-col :md="24" :lg="15" style="margin-bottom: 20px;">
-        <Card shadow>
-          <p v-if="formValidate.id" slot="title">修改日签</p>
-          <p v-else slot="title">添加日签</p>
-          <Row :gutter="20">
-            <Form :model="formValidate" :label-width="80" ref="formValidate" :rules="ruleValidate">
-              <FormItem label="标题" prop="title">
-                <Input v-model="formValidate.title" style="width: 430px"/>
-              </FormItem>
-              <FormItem label="日期">
-                <DatePicker
-                  :value="formValidate.dailyDate"
-                  @on-change="handleChange"
-                  type="date"
-                  placeholder="请选择日期"
-                  style="width: 430px"
-                ></DatePicker>
-              </FormItem>
-              <FormItem label="主图" prop="coverUrl">
-                <Upload
-                  ref="upload"
-                  type="drag"
-                  action="/api/file/upload"
-                  style="width: 210px"
-                  :show-upload-list="false"
-                  :on-success="handleSuccess"
-                  :format="['jpg','jpeg','png']"
-                  :max-size="2048"
-                >
-                  <div style="height: 120px;">
-                    <img
-                      v-if="formValidate.coverUrl"
-                      :src="formValidate.coverUrl"
-                      class="previewImg"
-                    >
-                    <Icon
-                      v-else
-                      type="ios-cloud-upload"
-                      size="52"
-                      style="color: #3399ff; line-height: 120px;"
-                    ></Icon>
-                  </div>
-                </Upload>
-                <Input v-model="formValidate.coverUrl" placeholder="主图地址" style="width: 210px; margin: 5px 10px 0px 0px;" />
-                <Input v-model="keyword" search @on-search="handleSearch(keyword)" placeholder="关键词" style="width: 210px; margin: 5px 10px 0px 0px;" />
-              </FormItem>
-              <FormItem label="内容" prop="content">
-                <Input
-                  v-model="formValidate.content"
-                  type="textarea"
-                  :autosize="{minRows: 5,maxRows: 20}"
-                  placeholder="请输入内容"
-                  style="width: 430px;"
-                ></Input>
-              </FormItem>
-              <FormItem>
-                <Button @click="handleContent" :loading="loading1" type="primary" style="margin-right: 8px">采集内容</Button>
-                <Button v-if="formValidate.id" @click="handleSubmit" :loading="loading2" type="primary">修改日签</Button>
-                <Button v-else @click="handleSubmit" :loading="loading2" type="primary">添加日签</Button>
-              </FormItem>
-            </Form>
-          </Row>
-        </Card>
-      </i-col>
+            <div class="content">{{formValidate.content}}</div>
+            <div class="footer">
+              <div class="from">From:《{{formValidate.title}}》</div>
+              <div class="shotLine"></div>
+              <div class="date">{{formValidate.dailyDate}}</div>
+            </div>
+          </div>
+        </div>
+      </Card>
+      <Card shadow style="position:absolute; left:585px; right:20px; overflow:hidden;">
+        <p v-if="formValidate.id" slot="title">修改日签</p>
+        <p v-else slot="title">添加日签</p>
+        <Row :gutter="20">
+          <Form :model="formValidate" :label-width="80" ref="formValidate" :rules="ruleValidate">
+            <FormItem label="标题" prop="title" style="margin-top: 16px;">
+              <Input v-model="formValidate.title" style="width: 90%;"/>
+            </FormItem>
+            <FormItem label="日期">
+              <DatePicker
+                :value="formValidate.dailyDate"
+                @on-change="handleChange"
+                type="date"
+                placeholder="请选择日期"
+                style="width: 90%"
+              ></DatePicker>
+            </FormItem>
+            <FormItem label="主图" prop="coverUrl">
+              <Upload
+                ref="upload"
+                type="drag"
+                action="/api/file/upload"
+                style="width: 210px"
+                :show-upload-list="false"
+                :on-success="handleSuccess"
+                :format="['jpg','jpeg','png']"
+                :max-size="2048"
+              >
+                <div style="height: 120px;">
+                  <img
+                    v-if="formValidate.coverUrl"
+                    :src="formValidate.coverUrl"
+                    class="previewImg"
+                  >
+                  <Icon
+                    v-else
+                    type="ios-cloud-upload"
+                    size="52"
+                    style="color: #3399ff; line-height: 120px;"
+                  ></Icon>
+                </div>
+              </Upload>
+              <Input v-model="formValidate.coverUrl" placeholder="主图地址" style="width: 210px; margin: 5px 10px 0px 0px;" />
+              <Input v-model="keyword" search @on-search="handleSearch(keyword)" placeholder="关键词" style="width: 210px; margin: 5px 10px 0px 0px;" />
+            </FormItem>
+            <FormItem label="内容" prop="content">
+              <Input
+                v-model="formValidate.content"
+                type="textarea"
+                :autosize="{minRows: 5,maxRows: 20}"
+                placeholder="请输入内容"
+                style="width: 90%"
+              ></Input>
+            </FormItem>
+            <FormItem>
+              <Button @click="handleContent" :loading="loading1" type="primary" style="margin-right: 8px">采集内容</Button>
+              <Button v-if="formValidate.id" @click="handleSubmit" :loading="loading2" type="primary">修改日签</Button>
+              <Button v-else @click="handleSubmit" :loading="loading2" type="primary">添加日签</Button>
+            </FormItem>
+          </Form>
+        </Row>
+      </Card>
     </Row>
   </div>
 </template>
@@ -200,11 +194,13 @@ export default {
 
 <style>
 /* 预览区样式 */
+.ivu-card-body {
+  padding: 0px;
+}
 .view {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #fefefe;
   padding: 30px;
-  margin-left: 8px;
   font-size: 18px;
   letter-spacing: 3px;
   width: 560px;
