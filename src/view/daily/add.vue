@@ -22,7 +22,7 @@
           </div>
         </div>
       </Card>
-      <Card shadow style="position:absolute; left:585px; right:20px; overflow:hidden;">
+      <Card shadow style="position:absolute; left:585px; right:10px; overflow:hidden;">
         <p v-if="formValidate.id" slot="title">修改日签</p>
         <p v-else slot="title">添加日签</p>
         <Row :gutter="20">
@@ -194,16 +194,12 @@ export default {
 
 <style>
 /* 预览区样式 */
-.ivu-card-body {
-  padding: 0px;
-}
 .view {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #fefefe;
-  padding: 30px;
+  padding: 13px;
   font-size: 18px;
   letter-spacing: 3px;
-  width: 560px;
 }
 .dayCard {
   width: 500px;
