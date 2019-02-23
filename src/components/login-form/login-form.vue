@@ -15,6 +15,9 @@
       </Input>
     </FormItem>
     <FormItem>
+      <Checkbox v-model="form.remember">记住我</Checkbox>
+    </FormItem>
+    <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
   </Form>
@@ -43,8 +46,9 @@ export default {
   data () {
     return {
       form: {
-        userName: 'double',
-        password: 'double@521'
+        userName: '',
+        password: '',
+        remember: true
       }
     }
   },
@@ -62,7 +66,8 @@ export default {
         if (valid) {
           this.$emit('on-success-valid', {
             userName: this.form.userName,
-            password: this.form.password
+            password: this.form.password,
+            remember: this.form.remember
           })
         }
       })

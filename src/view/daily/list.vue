@@ -1,9 +1,9 @@
 <template>
   <div>
     <Card>
-      <Form :model="searchItem" inline>
+      <Form :model="searchItem" inline @keydown.native.enter.prevent ="listLoad()">
         <FormItem>
-            <Input @keydown.native.enter.prevent ="listLoad()" type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
+            <Input type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
                 <span slot="prepend">标题</span>
             </Input>
         </FormItem>

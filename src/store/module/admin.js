@@ -23,14 +23,14 @@ export default {
   },
   getters: {
     adminInfo: state => state.adminInfo,
-    menuInfo: state => state.menuInfo,
+    menuInfo: state => state.menuInfo
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, {userName, password}) {
+    handleLogin ({ commit }, { userName, password, remember }) {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
-        login({ userName, password }).then(res => {
+        login({ userName, password, remember }).then(res => {
           commit('setToken', res.data.result.token)
           resolve()
         }).catch(err => {

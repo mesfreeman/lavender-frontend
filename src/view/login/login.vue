@@ -28,8 +28,8 @@ export default {
       'getLoginAdmin',
       'getMenuInfo'
     ]),
-    handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
+    handleSubmit ({ userName, password, remember }) {
+      this.handleLogin({ userName, password, remember }).then(res => {
         this.getLoginAdmin().then(res => {
           this.getMenuInfo().then(res => {
             this.$router.push({
