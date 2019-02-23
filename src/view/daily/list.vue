@@ -26,7 +26,7 @@
         <template slot-scope="{row, index}" slot="action">
           <ButtonGroup shape="circle">
             <Button @click="modifyItem(row.id)" type="primary">修改</Button>
-            <Button type="warning" :loading="loading1">
+            <Button type="warning" :loading="loading1[index]">
               <Poptip @on-ok="syncDailyItem(row.id, index)" title="你确定要同步吗？" :transfer="true" :confirm="true">同步</Poptip>
             </Button>
           </ButtonGroup>
@@ -48,7 +48,7 @@ export default {
     return {
       visible: false,
       imgUrl: '',
-      loading1: false,
+      loading1: [],
       columns: [
         {
           title: 'ID',
@@ -128,13 +128,13 @@ export default {
       this.$router.push({ name: '/tool/daily/modify', query: { id: id } })
     },
     syncDailyItem (id, index) {
-      this.loading1 = true
+      this.loading1[index] = true
       syncDaily({ id: id }).then(res => {
         this.$Message.success(res.data.result.message)
         this.tableData[index].mediaId = res.data.result.mediaId
-        this.loading1 = false
+        this.loading1[index] = false
       }).catch(err => {
-        if (err) this.loading1 = false
+        if (err) this.loading1[index] = false
       })
     }
   }
