@@ -128,13 +128,13 @@ export default {
       this.$router.push({ name: '/tool/daily/modify', query: { id: id } })
     },
     syncDailyItem (id, index) {
-      this.loading1[index] = true
+      this.$set(this.loading1, index, true)
       syncDaily({ id: id }).then(res => {
         this.$Message.success(res.data.result.message)
         this.tableData[index].mediaId = res.data.result.mediaId
-        this.loading1[index] = false
+        this.$set(this.loading1, index, false)
       }).catch(err => {
-        if (err) this.loading1[index] = false
+        this.$set(this.loading1, index, false)
       })
     }
   }
