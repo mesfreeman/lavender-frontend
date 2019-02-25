@@ -65,7 +65,7 @@
                 </div>
               </Upload>
               <Input v-model="formValidate.coverUrl" placeholder="主图地址" style="width: 210px; margin: 5px 10px 0px 0px;" />
-              <Input @keydown.native.enter.prevent="handleSearch(keyword)" v-model="keyword" search @on-search="handleSearch(keyword)" placeholder="关键词" style="width: 210px; margin: 5px 10px 0px 0px;" />
+              <Input v-model="keyword" search @on-search="handleSearch(keyword)" placeholder="关键词" style="width: 210px; margin: 5px 10px 0px 0px;" />
             </FormItem>
             <FormItem label="内容" prop="content">
               <Input
