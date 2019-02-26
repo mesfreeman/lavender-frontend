@@ -12,7 +12,7 @@
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <admin :admin-name="adminInfo.nickName ? adminInfo.nickName : '' "/>
+          <admin :admin-name="adminName ? adminName : '' "/>
           <!-- <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/> -->
           <!-- <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store> -->
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
@@ -77,7 +77,7 @@ export default {
       return this.$store.state.app.tagRouter
     },
     adminName () {
-      return this.$store.state.admin.nickName
+      return this.adminInfo.realName ? this.adminInfo.nickName + '(' + this.adminInfo.realName + ')' : this.adminInfo.nickName
     },
     cacheList () {
       return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
