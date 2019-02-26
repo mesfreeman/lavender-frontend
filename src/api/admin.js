@@ -31,3 +31,19 @@ export const logout = (token) => {
     method: 'post'
   })
 }
+
+export const viewProfile = (data) => {
+  return axios.request({
+    url: '/api/manage/admin/viewProfile',
+    data: data,
+    method: 'post'
+  })
+}
+
+export const list = (data) => {
+  return axios.request({
+    url: '/api/manage/admin/list',
+    data: data,
+    method: 'post'
+  })
+}

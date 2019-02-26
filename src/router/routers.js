@@ -73,6 +73,24 @@ export default [
             component: () => import('@/view/multilevel/level-2-3.vue')
           }
         ]
+      },
+      {
+        path: '/system/permission',
+        name: '/system/permission',
+        meta: {
+          title: '系统权限'
+        },
+        component: parentView,
+        children: [
+          {
+            path: '/system/permission/adminList',
+            name: '/system/permission/adminList',
+            meta: {
+              title: '系统用户'
+            },
+            component: () => import('@/view/admin/list.vue')
+          }
+        ]
       }
     ]
   },

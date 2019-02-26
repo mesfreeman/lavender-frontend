@@ -8,7 +8,7 @@
             </Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" icon="ios-search" @click="listLoad()">搜索</Button>
+            <Button type="primary" icon="ios-search" @click="listLoad()">查询</Button>
         </FormItem>
       </Form>
       <p slot="title">日签列表</p>
@@ -20,8 +20,8 @@
           <Icon @mouseenter.native="imageShow(row.dailyUrl)" type="ios-eye" size="24"></Icon>
         </template>
         <template slot-scope="{row}" slot="mediaId">
-          <span v-if="row.mediaId" style="color: #2d8cf0">已同步</span>
-          <span v-else style="color: #f29100">未同步</span>
+          <Tag v-if="row.mediaId" color="success">已同步</Tag>
+          <Tag v-else color="warning">未同步</Tag>
         </template>
         <template slot-scope="{row, index}" slot="action">
           <ButtonGroup shape="circle">
