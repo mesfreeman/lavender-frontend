@@ -3,7 +3,7 @@ import axios from '@/libs/api.request'
 export const login = ({ userName, password, remember }) => {
   return axios.request({
     url: '/api/manage/admin/login',
-    data: { name: userName, password: password, remember: remember },
+    data: { email: userName, password: password, remember: remember },
     method: 'post'
   })
 }
