@@ -40,6 +40,14 @@ export const viewProfile = (data) => {
   })
 }
 
+export const modifyProfile = (data) => {
+  return axios.request({
+    url: '/api/manage/admin/modifyProfile',
+    data: data,
+    method: 'post'
+  })
+}
+
 export const list = (data) => {
   return axios.request({
     url: '/api/manage/admin/list',

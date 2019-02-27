@@ -1,26 +1,26 @@
 <template>
   <div>
     <Card>
-      <Form :model="searchItem" inline @keydown.native.enter.prevent ="listLoad()" :label-width="40">
-          <FormItem label="ID:" :label-width="25">
-              <Input type="text" v-model="searchItem.adminId" placeholder="管理员ID"></Input>
-          </FormItem>
-          <FormItem label="名称:">
-              <Input type="text" v-model="searchItem.name" placeholder="模糊匹配昵称和真实姓名"></Input>
-          </FormItem>
-          <FormItem label="状态:">
-            <Select v-model="searchItem.status" clearable>
-                <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </FormItem>
-          <FormItem :label-width="0">
-              <Button type="primary" icon="ios-search" @click="listLoad()">查询</Button>
-          </FormItem>
+      <Form :model="searchItem" inline @keydown.native.enter.prevent="listLoad()" :label-width="40">
+        <FormItem label="ID:" :label-width="25">
+          <Input type="text" v-model="searchItem.adminId" placeholder="管理员ID"></Input>
+        </FormItem>
+        <FormItem label="名称:">
+          <Input type="text" v-model="searchItem.name" placeholder="模糊匹配昵称和真实姓名"></Input>
+        </FormItem>
+        <FormItem label="状态:">
+          <Select v-model="searchItem.status" clearable>
+            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem :label-width="0">
+          <Button type="primary" icon="ios-search" @click="listLoad()">查询</Button>
+        </FormItem>
       </Form>
       <p slot="title">系统用户</p>
       <Table :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="status">
-          <Tag v-if="row.status == 'normal'" color="primary">正常</Tag>
+          <Tag v-if="row.status == 'normal'" color="success">正常</Tag>
           <Tag v-else color="error">禁用</Tag>
         </template>
         <template slot-scope="{row, index}" slot="action">
@@ -30,136 +30,194 @@
           </ButtonGroup>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
+      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
     </Card>
-    <Modal v-model="viewVisible" title="查看" draggable>
+    <Modal v-model="viewVisible" title="查看" draggable footer-hide>
       <Row class="view-row">
-        <Col span="12">ID: {{formValidate.adminId}}</Col>
-        <Col span="12">昵称: {{formValidate.nickName}}</Col>
+        <Col span="12">ID：{{formValidate.adminId}}</Col>
+        <Col span="12">昵称：{{formValidate.nickName}}</Col>
       </Row>
       <Row class="view-row">
-        <Col span="12">姓名: {{formValidate.realName}}</Col>
-        <Col span="12">手机号: {{formValidate.mobile}}</Col>
+        <Col span="12">姓名：{{formValidate.realName}}</Col>
+        <Col span="12">手机号：{{formValidate.mobile}}</Col>
       </Row>
       <Row class="view-row">
-        <Col span="12">邮箱: {{formValidate.email}}</Col>
-        <Col span="12">状态: {{formValidate.status}}</Col>
+        <Col span="12">邮箱：{{formValidate.email}}</Col>
+        <Col span="12">状态：
+          <Tag v-if="formValidate.status == 'normal'" color="success">正常</Tag>
+          <Tag v-else color="error">禁用</Tag>
+        </Col>
       </Row>
       <Row class="view-row">
-        角色：xx
+        <Col span="24">角色：
+          <Tag v-for="item in formValidate.roles" color="success">{{item}}</Tag>
+        </Col>
       </Row>
-
+      <Row class="view-row">
+        <Col span="12">创建时间：{{formValidate.createdAt}}</Col>
+        <Col span="12">更新时间：{{formValidate.updatedAt}}</Col>
+      </Row>
+      <Row class="view-row">
+        <Col span="24">最后登录时间：{{formValidate.loginedAt}}</Col>
+      </Row>
+    </Modal>
+    <Modal v-model="modifyVisible" title="修改" draggable>
+      <Form :model="formValidate" :label-width="40">
+        <FormItem label="ID">
+          <Input v-model="formValidate.adminId" disabled/>
+        </FormItem>
+        <FormItem label="昵称">
+          <Input v-model="formValidate.nickName"/>
+        </FormItem>
+        <FormItem label="邮箱">
+          <Input v-model="formValidate.email" type="email"/>
+        </FormItem>
+        <FormItem label="状态">
+          <Select v-model="formValidate.status">
+            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="角色">
+          <Select v-model="formValidate.roleIds" multiple>
+            <Option v-for="(item, key) in roleList" :value="key" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="密码">
+          <Input v-model="formValidate.password"/>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" size="large" @click="handleCancle()">取消</Button>
+        <Button type="primary" size="large" @click="handleSubmit()">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
 
 <script>
-import { list, viewProfile } from '@/api/admin'
+import { list, viewProfile, modifyProfile } from "@/api/admin";
+import { liteList } from "@/api/role";
 
 export default {
-  data () {
+  data() {
     return {
       viewVisible: false,
+      modifyVisible: false,
       statusList: [
         {
-          value: 'normal',
-          label: '正常'
+          value: "normal",
+          label: "正常"
         },
         {
-          value: 'disable',
-          label: '禁用'
+          value: "disable",
+          label: "禁用"
         }
       ],
+      roleList: [],
       columns: [
         {
-          title: 'ID',
-          key: 'adminId',
+          title: "ID",
+          key: "adminId",
           width: 70
         },
         {
-          title: '昵称',
-          key: 'nickName'
+          title: "昵称",
+          key: "nickName"
         },
         {
-          title: '姓名',
-          key: 'realName'
+          title: "姓名",
+          key: "realName"
         },
         {
-          title: '邮箱',
-          key: 'email'
+          title: "邮箱",
+          key: "email"
         },
         {
-          title: '状态',
-          slot: 'status',
+          title: "状态",
+          slot: "status",
           width: 90
         },
         {
-          title: '最后登录时间',
-          key: 'loginedAt'
+          title: "最后登录时间",
+          key: "loginedAt"
         },
         {
-          title: '创建时间',
-          key: 'createdAt'
+          title: "创建时间",
+          key: "createdAt"
         },
         {
-          title: '最后更新时间',
-          key: 'updatedAt'
+          title: "最后更新时间",
+          key: "updatedAt"
         },
         {
-          title: '操作',
-          slot: 'action',
-          align: 'center'
+          title: "操作",
+          slot: "action",
+          align: "center"
         }
       ],
       searchItem: {
-        title: '',
+        title: "",
         pageIndex: 1,
         pageSize: 10
       },
       summary: {},
       tableData: [],
       formValidate: {}
-    }
+    };
   },
-  mounted () {
-    this.listLoad()
+  mounted() {
+    this.listLoad();
   },
   methods: {
-    pageIndexChange (pageIndex) {
-      this.searchItem.pageIndex = pageIndex
-      this.listLoad()
+    pageIndexChange(pageIndex) {
+      this.searchItem.pageIndex = pageIndex;
+      this.listLoad();
     },
-    pageSizeChange (pageSize) {
-      this.searchItem.pageSize = pageSize
-      this.listLoad()
+    pageSizeChange(pageSize) {
+      this.searchItem.pageSize = pageSize;
+      this.listLoad();
     },
-    listLoad () {
+    listLoad() {
       list(this.searchItem).then(res => {
-        this.summary = res.data.result.summary
-        this.tableData = res.data.result.list
-      })
+        this.summary = res.data.result.summary;
+        this.tableData = res.data.result.list;
+      });
     },
-    viewItem (adminId) {
+    viewItem(adminId) {
       this.viewVisible = true
-      viewProfile({adminId: adminId}).then(res => {
+      viewProfile({ adminId: adminId }).then(res => {
         this.formValidate = res.data.result
+      });
+    },
+    modifyItem(adminId) {
+      viewProfile({ adminId: adminId }).then(res => {
+        this.modifyVisible = true
+        let roleIds = []
+        for (var index in res.data.result.roles) {
+          roleIds.push(index)
+        }
+        this.formValidate.roleIds = roleIds
+        this.formValidate.adminId = res.data.result.adminId
+        this.formValidate.nickName = res.data.result.nickName
+        this.formValidate.email = res.data.result.email
+        this.formValidate.status = res.data.result.status
+      });
+      liteList({}).then(res => {
+        this.roleList = res.data.result.list
       })
     },
-    modifyItem (id) {
-      this.$router.push({ name: '/tool/daily/modify', query: { id: id } })
+    handleCancle() {
+      this.modifyVisible = false
     },
-    syncDailyItem (id, index) {
-      this.$set(this.loading1, index, true)
-      syncDaily({ id: id }).then(res => {
-        this.$Message.success(res.data.result.message)
-        this.tableData[index].mediaId = res.data.result.mediaId
-        this.$set(this.loading1, index, false)
-      }).catch(err => {
-        this.$set(this.loading1, index, false)
+    handleSubmit() {
+      modifyProfile(this.formValidate).then(res => {
+        this.modifyVisible = false
+        this.$Message.success('修改成功')
+        this.listLoad();
       })
     }
   }
-}
+};
 </script>
 
 <style>
@@ -168,6 +226,6 @@ export default {
   text-align: right;
 }
 .view-row {
-  margin: 6px 0px;
+  line-height: 35px;
 }
 </style>
