@@ -180,11 +180,11 @@ export default {
       this.listLoad ()
     },
     pageIndexChange(pageIndex) {
-      this.searchItem.pageIndex = pageIndex;
+      this.searchItem.pageIndex = pageIndex
       this.listLoad()
     },
     pageSizeChange(pageSize) {
-      this.searchItem.pageSize = pageSize;
+      this.searchItem.pageSize = pageSize
       this.listLoad()
     },
     listLoad() {
