@@ -70,7 +70,7 @@ export default [
             meta: {
               title: '用户列表'
             },
-            component: () => import('@/view/multilevel/level-2-3.vue')
+            component: () => import('@/view/user/list.vue')
           }
         ]
       },

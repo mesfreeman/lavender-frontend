@@ -6,7 +6,7 @@
           <Input type="text" v-model="searchItem.adminId" placeholder="管理员ID"></Input>
         </FormItem>
         <FormItem label="名称:">
-          <Input type="text" v-model="searchItem.name" placeholder="模糊匹配昵称和真实姓名"></Input>
+          <Input type="text" v-model="searchItem.name" placeholder="模糊匹配昵称和姓名"></Input>
         </FormItem>
         <FormItem label="状态:">
           <Select v-model="searchItem.status" clearable>
@@ -19,7 +19,7 @@
       </Form>
       <p slot="title">系统用户</p>
       <Button slot="extra" @click="createItem" type="primary">创建</Button>
-      <Table :columns="columns" :data="tableData">
+      <Table @on-sort-change="handleSortChange" :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="status">
           <Tag v-if="row.status == 'normal'" color="success">正常</Tag>
           <Tag v-else color="error">禁用</Tag>
@@ -119,11 +119,14 @@ export default {
         {
           title: "ID",
           key: "adminId",
-          width: 70
+          width: 70,
+          sortable: "custom",
+          sortType: "desc"
         },
         {
           title: "昵称",
-          key: "nickName"
+          key: "nickName",
+          sortable: "custom",
         },
         {
           title: "姓名",
@@ -136,11 +139,13 @@ export default {
         {
           title: "状态",
           slot: "status",
-          width: 90
+          width: 90,
+          sortable: "custom",
         },
         {
           title: "最后登录时间",
-          key: "loginedAt"
+          key: "loginedAt",
+          sortable: "custom",
         },
         {
           title: "创建时间",
@@ -157,7 +162,6 @@ export default {
         }
       ],
       searchItem: {
-        title: "",
         pageIndex: 1,
         pageSize: 10
       },
@@ -167,21 +171,26 @@ export default {
     };
   },
   mounted() {
-    this.listLoad();
+    this.listLoad()
   },
   methods: {
+    handleSortChange (data) {
+      this.searchItem.orderBy = data.key
+      this.searchItem.orderDirection = data.order
+      this.listLoad ()
+    },
     pageIndexChange(pageIndex) {
       this.searchItem.pageIndex = pageIndex;
-      this.listLoad();
+      this.listLoad()
     },
     pageSizeChange(pageSize) {
       this.searchItem.pageSize = pageSize;
-      this.listLoad();
+      this.listLoad()
     },
     listLoad() {
       list(this.searchItem).then(res => {
-        this.summary = res.data.result.summary;
-        this.tableData = res.data.result.list;
+        this.summary = res.data.result.summary
+        this.tableData = res.data.result.list
       });
     },
     viewItem(adminId) {
@@ -217,7 +226,7 @@ export default {
       modifyProfile(this.formValidate).then(res => {
         this.modifyVisible = false
         this.$Message.success("修改成功")
-        this.listLoad();
+        this.listLoad()
       })
     }
   }

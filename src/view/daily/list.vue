@@ -12,7 +12,7 @@
         </FormItem>
       </Form>
       <p slot="title">日签列表</p>
-      <Table :columns="columns" :data="tableData">
+      <Table @on-sort-change="handleSortChange" :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="coverUrl">
           <Icon @mouseenter.native="imageShow(row.coverUrl)" type="ios-eye" size="24"></Icon>
         </template>
@@ -53,7 +53,9 @@ export default {
         {
           title: 'ID',
           key: 'id',
-          width: 70
+          width: 70,
+          sortable: 'custom',
+          sortType: "desc"
         },
         {
           title: '标题',
@@ -63,7 +65,8 @@ export default {
         {
           title: '日期',
           key: 'dailyDate',
-          width: 100
+          width: 100,
+          sortable: 'custom'
         },
         {
           title: '封面图',
@@ -84,7 +87,8 @@ export default {
         },
         {
           title: '创建时间',
-          key: 'createdAt'
+          key: 'createdAt',
+          sortable: 'custom'
         },
         {
           title: '操作',
@@ -103,16 +107,21 @@ export default {
     }
   },
   mounted () {
-    this.listLoad()
+    this.listLoad ()
   },
   methods: {
+    handleSortChange (data) {
+      this.searchItem.orderBy = data.key
+      this.searchItem.orderDirection = data.order
+      this.listLoad ()
+    },
     pageIndexChange (pageIndex) {
       this.searchItem.pageIndex = pageIndex
-      this.listLoad()
+      this.listLoad ()
     },
     pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
-      this.listLoad()
+      this.listLoad ()
     },
     imageShow (imgUrl) {
       this.imgUrl = imgUrl
