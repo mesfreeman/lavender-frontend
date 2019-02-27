@@ -18,6 +18,7 @@
         </FormItem>
       </Form>
       <p slot="title">系统用户</p>
+      <Button slot="extra" @click="createItem" type="primary">创建</Button>
       <Table :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="status">
           <Tag v-if="row.status == 'normal'" color="success">正常</Tag>
@@ -189,6 +190,9 @@ export default {
         this.formValidate = res.data.result
       });
     },
+    createItem() {
+      this.$Message.info("暂不支持")
+    },
     modifyItem(adminId) {
       viewProfile({ adminId: adminId }).then(res => {
         this.modifyVisible = true
@@ -212,7 +216,7 @@ export default {
     handleSubmit() {
       modifyProfile(this.formValidate).then(res => {
         this.modifyVisible = false
-        this.$Message.success('修改成功')
+        this.$Message.success("修改成功")
         this.listLoad();
       })
     }
