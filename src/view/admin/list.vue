@@ -21,13 +21,13 @@
       <Button slot="extra" @click="createItem" type="primary">创建</Button>
       <Table @on-sort-change="handleSortChange" :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="status">
-          <Tag v-if="row.status == 'normal'" color="success">正常</Tag>
-          <Tag v-else color="error">禁用</Tag>
+          <Tag v-if="row.status == 'normal'" color="green">正常</Tag>
+          <Tag v-else color="red">禁用</Tag>
         </template>
         <template slot-scope="{row, index}" slot="action">
           <ButtonGroup shape="circle">
             <Button @click="viewItem(row.adminId)" type="primary">查看</Button>
-            <Button @click="modifyItem(row.adminId)" type="warning">修改</Button>
+            <Button @click="modifyItem(row.adminId)" type="success">修改</Button>
           </ButtonGroup>
         </template>
       </Table>
@@ -45,13 +45,13 @@
       <Row class="view-row">
         <Col span="12">邮箱：{{formValidate.email}}</Col>
         <Col span="12">状态：
-          <Tag v-if="formValidate.status == 'normal'" color="success">正常</Tag>
-          <Tag v-else color="error">禁用</Tag>
+          <Tag v-if="formValidate.status == 'normal'" color="green">正常</Tag>
+          <Tag v-else color="red">禁用</Tag>
         </Col>
       </Row>
       <Row class="view-row">
         <Col span="24">角色：
-          <Tag v-for="item in formValidate.roles" color="success">{{item}}</Tag>
+          <Tag v-for="item in formValidate.roles" color="primary">{{item}}</Tag>
         </Col>
       </Row>
       <Row class="view-row">
@@ -75,7 +75,7 @@
         </FormItem>
         <FormItem label="状态">
           <Select v-model="formValidate.status">
-            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in statusList" :value="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="角色">
@@ -241,5 +241,8 @@ export default {
 }
 .view-row {
   line-height: 35px;
+}
+.ivu-card-extra {
+  top: 10px;
 }
 </style>
