@@ -7,11 +7,11 @@
 #### 安装
 
 ```bush
-  npm install
+npm install
 ```
 #### 运行
 
-开发环境 
+开发环境
 
 ```bush
 npm run dev
