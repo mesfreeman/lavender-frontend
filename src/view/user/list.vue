@@ -12,10 +12,10 @@
           <Input type="text" v-model="searchItem.name" placeholder="模糊匹配昵称和姓名"></Input>
         </FormItem>
         <FormItem label="最后登录时间:" :label-width="90">
-          <DatePicker @on-change="handleLoginedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择最后登录时间"></DatePicker>
+          <DatePicker @on-change="handleLoginedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placeholder="选择最后登录时间"></DatePicker>
         </FormItem>
         <FormItem label="创建时间:" :label-width="70">
-          <DatePicker @on-change="handleCreatedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择创建时间"></DatePicker>
+          <DatePicker @on-change="handleCreatedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placeholder="选择创建时间"></DatePicker>
         </FormItem>
         <FormItem :label-width="0">
           <Button type="primary" icon="ios-search" @click="listLoad(true)">查询</Button>
@@ -36,7 +36,7 @@
           <span v-else>客户端注册</span>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
+      <Page :total="summary.totalNum" :current="summary.pageIndex" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
     </Card>
   </div>
 </template>

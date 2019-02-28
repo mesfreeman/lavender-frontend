@@ -31,7 +31,7 @@
           </ButtonGroup>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
+      <Page :total="summary.totalNum" :current="summary.pageIndex" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
     </Card>
     <Modal v-model="viewVisible" title="查看" draggable footer-hide>
       <Row class="view-row">
