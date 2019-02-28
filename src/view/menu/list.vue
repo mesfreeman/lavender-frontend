@@ -158,7 +158,7 @@ export default {
       })
     },
     handleCancle () {
-      this.addVisible = false
+      this.changeVisible = false
     },
     handleSubmit () {
       if (this.changeType === 'add') {

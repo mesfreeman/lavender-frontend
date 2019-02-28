@@ -94,7 +94,7 @@ export default {
           title: '操作',
           slot: 'action',
           align: 'center',
-          width: 150
+          width: 170
         }
       ],
       searchItem: {
