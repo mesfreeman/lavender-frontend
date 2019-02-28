@@ -1,14 +1,14 @@
 <template>
   <div>
     <Card>
-      <Form :model="searchItem" inline @keydown.native.enter.prevent ="listLoad()">
+      <Form :model="searchItem" inline @keydown.native.enter.prevent ="listLoad(true)">
         <FormItem>
             <Input type="text" v-model="searchItem.title" placeholder="模糊匹配标题">
                 <span slot="prepend">标题</span>
             </Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" icon="ios-search" @click="listLoad()">查询</Button>
+            <Button type="primary" icon="ios-search" @click="listLoad(true)">查询</Button>
         </FormItem>
       </Form>
       <p slot="title">日签列表</p>
@@ -107,27 +107,28 @@ export default {
     }
   },
   mounted () {
-    this.listLoad ()
+    this.listLoad (true)
   },
   methods: {
     handleSortChange (data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
-      this.listLoad ()
+      this.listLoad (false)
     },
     pageIndexChange (pageIndex) {
       this.searchItem.pageIndex = pageIndex
-      this.listLoad ()
+      this.listLoad (false)
     },
     pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
-      this.listLoad ()
+      this.listLoad (false)
     },
     imageShow (imgUrl) {
       this.imgUrl = imgUrl
       this.visible = true
     },
-    listLoad () {
+    listLoad (status) {
+      if (status) this.searchItem.pageIndex = 1
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
         this.tableData = res.data.result.list

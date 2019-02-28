@@ -1,7 +1,7 @@
 <template>
   <div>
     <Card>
-      <Form :model="searchItem" inline @keydown.native.enter.prevent="listLoad()" :label-width="40">
+      <Form :model="searchItem" inline @keydown.native.enter.prevent="listLoad(true)" :label-width="40">
         <FormItem label="ID:" :label-width="25">
           <Input type="text" v-model="searchItem.adminId" placeholder="管理员ID"></Input>
         </FormItem>
@@ -14,7 +14,7 @@
           </Select>
         </FormItem>
         <FormItem :label-width="0">
-          <Button type="primary" icon="ios-search" @click="listLoad()">查询</Button>
+          <Button type="primary" icon="ios-search" @click="listLoad(true)">查询</Button>
         </FormItem>
       </Form>
       <p slot="title">系统用户</p>
@@ -171,23 +171,24 @@ export default {
     };
   },
   mounted() {
-    this.listLoad()
+    this.listLoad(true)
   },
   methods: {
     handleSortChange (data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
-      this.listLoad ()
+      this.listLoad (false)
     },
     pageIndexChange(pageIndex) {
       this.searchItem.pageIndex = pageIndex
-      this.listLoad()
+      this.listLoad(false)
     },
     pageSizeChange(pageSize) {
       this.searchItem.pageSize = pageSize
-      this.listLoad()
+      this.listLoad(false)
     },
-    listLoad() {
+    listLoad(status) {
+      if (status) this.searchItem.pageIndex = 1
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
         this.tableData = res.data.result.list
@@ -226,7 +227,7 @@ export default {
       modifyProfile(this.formValidate).then(res => {
         this.modifyVisible = false
         this.$Message.success("修改成功")
-        this.listLoad()
+        this.listLoad(false)
       })
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Card>
-      <Form :model="searchItem" inline @keydown.native.enter.prevent="listLoad()" :label-width="40">
+      <Form :model="searchItem" inline @keydown.native.enter.prevent="listLoad(true)" :label-width="40">
         <FormItem label="ID:" :label-width="25">
           <Input type="text" v-model="searchItem.id" placeholder="用户ID"></Input>
         </FormItem>
@@ -18,7 +18,7 @@
           <DatePicker @on-change="handleCreatedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择创建时间"></DatePicker>
         </FormItem>
         <FormItem :label-width="0">
-          <Button type="primary" icon="ios-search" @click="listLoad()">查询</Button>
+          <Button type="primary" icon="ios-search" @click="listLoad(true)">查询</Button>
         </FormItem>
       </Form>
       <p slot="title">用户列表</p>
@@ -104,7 +104,7 @@ export default {
     };
   },
   mounted() {
-    this.listLoad()
+    this.listLoad(true)
   },
   methods: {
     handleLoginedAtChange(date) {
@@ -118,17 +118,18 @@ export default {
     handleSortChange(data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
-      this.listLoad()
+      this.listLoad(false)
     },
     pageIndexChange(pageIndex) {
       this.searchItem.pageIndex = pageIndex
-      this.listLoad()
+      this.listLoad(false)
     },
     pageSizeChange(pageSize) {
       this.searchItem.pageSize = pageSize
-      this.listLoad()
+      this.listLoad(false)
     },
-    listLoad() {
+    listLoad(status) {
+      if (status) this.searchItem.pageIndex = 1
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
         this.tableData = res.data.result.list
