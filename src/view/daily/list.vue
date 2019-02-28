@@ -20,12 +20,12 @@
           <Icon @mouseenter.native="imageShow(row.dailyUrl)" type="ios-eye" size="24"></Icon>
         </template>
         <template slot-scope="{row}" slot="mediaId">
-          <Tag v-if="row.mediaId" color="success">已同步</Tag>
-          <Tag v-else color="warning">未同步</Tag>
+          <Tag v-if="row.mediaId" color="green">已同步</Tag>
+          <Tag v-else color="red">未同步</Tag>
         </template>
         <template slot-scope="{row, index}" slot="action">
           <ButtonGroup shape="circle">
-            <Button @click="modifyItem(row.id)" type="primary">修改</Button>
+            <Button @click="modifyItem(row.id)" type="success">修改</Button>
             <Button type="warning" :loading="loading1[index]">
               <Poptip @on-ok="syncDailyItem(row.id, index)" title="你确定要同步吗？" :transfer="true" :confirm="true">同步</Poptip>
             </Button>
@@ -34,7 +34,7 @@
       </Table>
       <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
     </Card>
-    <Modal v-model="visible" :closable="false" footer-hide>
+    <Modal class="image" v-model="visible" :closable="false" footer-hide>
         <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
   </div>
@@ -156,7 +156,7 @@ export default {
   margin-top: 10px;
   text-align: right;
 }
-.ivu-modal-body {
+.image .ivu-modal-body {
   line-height: 0;
   padding: 0;
 }

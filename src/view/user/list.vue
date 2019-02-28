@@ -24,11 +24,11 @@
       <p slot="title">用户列表</p>
       <Table @on-sort-change="handleSortChange" :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="avatarUrl">
-          <img :src="row.avatarUrl" style="height: 40px"/>
+          <Avatar :src="row.avatarUrl" size="large"/>
         </template>
         <template slot-scope="{row}" slot="status">
-          <Tag v-if="row.status == 'normal'" color="success">正常</Tag>
-          <Tag v-else color="error">禁用</Tag>
+          <Tag v-if="row.status == 'normal'" color="green">正常</Tag>
+          <Tag v-else color="red">禁用</Tag>
         </template>
         <template slot-scope="{row}" slot="source">
           <span v-if="row.source == 'WXMNP'">微信小程序</span>
@@ -70,7 +70,8 @@ export default {
         },
         {
           title: "头像",
-          slot: "avatarUrl"
+          slot: "avatarUrl",
+          align: "center"
         },
         {
           title: "手机号",

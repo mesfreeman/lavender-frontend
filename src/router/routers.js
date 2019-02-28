@@ -83,6 +83,14 @@ export default [
         component: parentView,
         children: [
           {
+            path: '/system/permission/menuList',
+            name: '/system/permission/menuList',
+            meta: {
+              title: '菜单管理'
+            },
+            component: () => import('@/view/menu/list.vue')
+          },
+          {
             path: '/system/permission/adminList',
             name: '/system/permission/adminList',
             meta: {
