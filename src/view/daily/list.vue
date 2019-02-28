@@ -32,7 +32,7 @@
           </ButtonGroup>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
+      <Page :total="summary.totalNum" :current="summary.pageIndex" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
     </Card>
     <Modal class="image" v-model="visible" :closable="false" footer-hide>
         <img :src="imgUrl" v-if="visible" style="width: 100%;">
