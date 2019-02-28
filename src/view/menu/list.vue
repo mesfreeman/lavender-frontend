@@ -33,7 +33,7 @@
       <Form :model="formValidate" :label-width="50">
         <FormItem label="父级：">
           <Select v-model="formValidate.parentId" clearable>
-            <Option v-for="item in tableData" :value="item.id" :label="item.title">{{ item.title }}</Option>
+            <Option v-for="item in tableData" :value="item.id" :key="item.id">{{ item.title }}</Option>
           </Select>
         </FormItem>
         <FormItem label="名称：">
@@ -45,9 +45,9 @@
             <Radio label="nav">导航</Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem v-if="changeType=='modify'" label="状态：">
+        <FormItem v-if="changeType==='modify'" label="状态：">
           <Select v-model="formValidate.status">
-            <Option v-for="item in statusList" :value="item.value">{{ item.label }}</Option>
+            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="图标：">
@@ -70,112 +70,113 @@
 </template>
 
 <script>
-import { list, add, view, modify, deleteItem } from "@/api/menu";
+import { list, add, view, modify, deleteItem } from '@/api/menu'
 
 export default {
-  data() {
+  data () {
     return {
       changeVisible: false,
-      changeType: "add",
+      changeType: 'add',
       statusList: [
         {
-          value: "normal",
-          label: "正常"
+          value: 'normal',
+          label: '正常'
         },
         {
-          value: "disable",
-          label: "禁用"
+          value: 'disable',
+          label: '禁用'
         }
       ],
       columns: [
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           width: 70
         },
         {
-          title: "图标",
-          slot: "icon",
-          width: 70,
+          title: '图标',
+          slot: 'icon',
+          width: 70
         },
         {
-          title: "名称",
-          slot: "title"
+          title: '名称',
+          slot: 'title'
         },
         {
-          title: "路由",
-          key: "route"
+          title: '路由',
+          key: 'route'
         },
         {
-          title: "排序",
-          key: "sort"
+          title: '排序',
+          key: 'sort'
         },
         {
-          title: "类型",
-          slot: "type"
+          title: '类型',
+          slot: 'type'
         },
         {
-          title: "状态",
-          slot: "status",
+          title: '状态',
+          slot: 'status'
         },
         {
-          title: "操作",
-          slot: "action",
-          align: "center"
+          title: '操作',
+          slot: 'action',
+          align: 'center',
+          width: 150
         }
       ],
       tableData: [],
       formValidate: {}
-    };
+    }
   },
-  mounted() {
+  mounted () {
     this.listLoad()
   },
   methods: {
-    listLoad() {
+    listLoad () {
       list(this.searchItem).then(res => {
         this.tableData = res.data.result.list
-      });
+      })
     },
-    addItem() {
+    addItem () {
       this.changeVisible = true
-      this.changeType = "add"
+      this.changeType = 'add'
       this.formValidate = {}
-      this.formValidate.type = "api"
+      this.formValidate.type = 'api'
     },
-    modifyItem(id) {
-      view({id: id}).then(res => {
+    modifyItem (id) {
+      view({ id: id }).then(res => {
         this.changeVisible = true
-        this.changeType = "modify"
+        this.changeType = 'modify'
         this.formValidate = res.data.result
       })
     },
-    deleteItem(id) {
-      deleteItem({id: id}).then(res => {
-        this.$Message.success("删除成功")
+    deleteItem (id) {
+      deleteItem({ id: id }).then(res => {
+        this.$Message.success('删除成功')
         this.listLoad(false)
       })
     },
-    handleCancle() {
+    handleCancle () {
       this.addVisible = false
     },
-    handleSubmit() {
-      if (this.changeType == "add") {
+    handleSubmit () {
+      if (this.changeType === 'add') {
         add(this.formValidate).then(res => {
           this.changeVisible = false
-          this.$Message.success("添加成功")
+          this.$Message.success('添加成功')
           this.listLoad(false)
         })
       } else {
         modify(this.formValidate).then(res => {
           this.changeVisible = false
-          this.$Message.success("修改成功")
+          this.$Message.success('修改成功')
           this.listLoad(false)
         })
       }
     }
   }
-};
+}
 </script>
 
 <style>
