@@ -55,7 +55,7 @@ export default {
           key: 'id',
           width: 70,
           sortable: 'custom',
-          sortType: "desc"
+          sortType: 'desc'
         },
         {
           title: '标题',
@@ -94,7 +94,7 @@ export default {
           title: '操作',
           slot: 'action',
           align: 'center',
-          width: 170
+          width: 150
         }
       ],
       searchItem: {
@@ -107,21 +107,21 @@ export default {
     }
   },
   mounted () {
-    this.listLoad (true)
+    this.listLoad(true)
   },
   methods: {
     handleSortChange (data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
-      this.listLoad (false)
+      this.listLoad(false)
     },
     pageIndexChange (pageIndex) {
       this.searchItem.pageIndex = pageIndex
-      this.listLoad (false)
+      this.listLoad(false)
     },
     pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
-      this.listLoad (false)
+      this.listLoad(false)
     },
     imageShow (imgUrl) {
       this.imgUrl = imgUrl
@@ -144,7 +144,7 @@ export default {
         this.tableData[index].mediaId = res.data.result.mediaId
         this.$set(this.loading1, index, false)
       }).catch(err => {
-        this.$set(this.loading1, index, false)
+        if (err) this.$set(this.loading1, index, false)
       })
     }
   }
