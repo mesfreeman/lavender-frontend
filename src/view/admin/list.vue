@@ -140,12 +140,12 @@ export default {
           title: "状态",
           slot: "status",
           width: 90,
-          sortable: "custom",
+          sortable: "custom"
         },
         {
           title: "最后登录时间",
           key: "loginedAt",
-          sortable: "custom",
+          sortable: "custom"
         },
         {
           title: "创建时间",
