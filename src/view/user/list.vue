@@ -24,7 +24,7 @@
       <p slot="title">用户列表</p>
       <Table @on-sort-change="handleSortChange" :columns="columns" :data="tableData">
         <template slot-scope="{row}" slot="avatarUrl">
-          <Avatar :src="row.avatarUrl" size="large"/>
+          <Avatar :src="row.avatarUrl" size="large" />
         </template>
         <template slot-scope="{row}" slot="status">
           <Tag v-if="row.status == 'normal'" color="green">正常</Tag>
