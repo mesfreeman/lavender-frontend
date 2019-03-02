@@ -21,7 +21,7 @@
         </template>
         <template slot-scope="{row}" slot="mediaId">
           <Tag v-if="row.mediaId" color="green">已同步</Tag>
-          <Tag v-else color="red">未同步</Tag>
+          <Tag v-else color="orange">未同步</Tag>
         </template>
         <template slot-scope="{row, index}" slot="action">
           <ButtonGroup shape="circle">
