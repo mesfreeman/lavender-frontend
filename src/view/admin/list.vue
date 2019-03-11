@@ -31,7 +31,7 @@
           </ButtonGroup>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
+      <Page :total="summary.totalNum" :current="summary.pageIndex" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
     </Card>
     <Modal v-model="viewVisible" title="查看" draggable footer-hide>
       <Row class="view-row">
@@ -51,7 +51,7 @@
       </Row>
       <Row class="view-row">
         <Col span="24">角色：
-          <Tag v-for="item in formValidate.roles" color="primary">{{item}}</Tag>
+          <Tag v-for="(item, key) in formValidate.roles" :key="key" color="primary">{{item}}</Tag>
         </Col>
       </Row>
       <Row class="view-row">
@@ -75,12 +75,12 @@
         </FormItem>
         <FormItem label="状态">
           <Select v-model="formValidate.status">
-            <Option v-for="item in statusList" :value="item.value">{{ item.label }}</Option>
+            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="角色">
           <Select v-model="formValidate.roleIds" multiple>
-            <Option v-for="(item, key) in roleList" :value="key" :key="item">{{ item }}</Option>
+            <Option v-for="(item, key) in roleList" :value="key" :key="key">{{ item }}</Option>
           </Select>
         </FormItem>
         <FormItem label="密码">
@@ -96,69 +96,70 @@
 </template>
 
 <script>
-import { list, viewProfile, modifyProfile } from "@/api/admin";
-import { liteList } from "@/api/role";
+import { list, viewProfile, modifyProfile } from '@/api/admin'
+import { liteList } from '@/api/role'
 
 export default {
-  data() {
+  data () {
     return {
       viewVisible: false,
       modifyVisible: false,
       statusList: [
         {
-          value: "normal",
-          label: "正常"
+          value: 'normal',
+          label: '正常'
         },
         {
-          value: "disable",
-          label: "禁用"
+          value: 'disable',
+          label: '禁用'
         }
       ],
       roleList: [],
       columns: [
         {
-          title: "ID",
-          key: "adminId",
+          title: 'ID',
+          key: 'adminId',
           width: 70,
-          sortable: "custom",
-          sortType: "desc"
+          sortable: 'custom',
+          sortType: 'desc'
         },
         {
-          title: "昵称",
-          key: "nickName",
-          sortable: "custom",
+          title: '昵称',
+          key: 'nickName',
+          sortable: 'custom'
         },
         {
-          title: "姓名",
-          key: "realName"
+          title: '姓名',
+          key: 'realName'
         },
         {
-          title: "邮箱",
-          key: "email"
+          title: '邮箱',
+          key: 'email'
         },
         {
-          title: "状态",
-          slot: "status",
+          title: '状态',
+          slot: 'status',
           width: 90,
-          sortable: "custom"
+          sortable: 'custom'
         },
         {
-          title: "最后登录时间",
-          key: "loginedAt",
-          sortable: "custom"
+          title: '最后登录时间',
+          key: 'loginedAt',
+          sortable: 'custom'
         },
         {
-          title: "创建时间",
-          key: "createdAt"
+          title: '创建时间',
+          key: 'createdAt'
         },
         {
-          title: "最后更新时间",
-          key: "updatedAt"
+          title: '最后更新时间',
+          key: 'updatedAt'
         },
         {
-          title: "操作",
-          slot: "action",
-          align: "center"
+          title: '操作',
+          slot: 'action',
+          align: 'center',
+          width: 150
         }
       ],
       searchItem: {
@@ -168,42 +169,42 @@ export default {
       summary: {},
       tableData: [],
       formValidate: {}
-    };
+    }
   },
-  mounted() {
+  mounted () {
     this.listLoad(true)
   },
   methods: {
     handleSortChange (data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
-      this.listLoad (false)
+      this.listLoad(false)
     },
-    pageIndexChange(pageIndex) {
+    pageIndexChange (pageIndex) {
       this.searchItem.pageIndex = pageIndex
       this.listLoad(false)
     },
-    pageSizeChange(pageSize) {
+    pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
       this.listLoad(false)
     },
-    listLoad(status) {
+    listLoad (status) {
       if (status) this.searchItem.pageIndex = 1
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
         this.tableData = res.data.result.list
-      });
+      })
     },
-    viewItem(adminId) {
+    viewItem (adminId) {
       this.viewVisible = true
       viewProfile({ adminId: adminId }).then(res => {
         this.formValidate = res.data.result
-      });
+      })
     },
-    createItem() {
-      this.$Message.info("暂不支持")
+    createItem () {
+      this.$Message.info('暂不支持')
     },
-    modifyItem(adminId) {
+    modifyItem (adminId) {
       viewProfile({ adminId: adminId }).then(res => {
         this.modifyVisible = true
         let roleIds = []
@@ -215,23 +216,23 @@ export default {
         this.formValidate.nickName = res.data.result.nickName
         this.formValidate.email = res.data.result.email
         this.formValidate.status = res.data.result.status
-      });
+      })
       liteList({}).then(res => {
         this.roleList = res.data.result.list
       })
     },
-    handleCancle() {
+    handleCancle () {
       this.modifyVisible = false
     },
-    handleSubmit() {
+    handleSubmit () {
       modifyProfile(this.formValidate).then(res => {
         this.modifyVisible = false
-        this.$Message.success("修改成功")
+        this.$Message.success('修改成功')
         this.listLoad(false)
       })
     }
   }
-};
+}
 </script>
 
 <style>

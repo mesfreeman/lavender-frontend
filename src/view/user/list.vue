@@ -12,10 +12,10 @@
           <Input type="text" v-model="searchItem.name" placeholder="模糊匹配昵称和姓名"></Input>
         </FormItem>
         <FormItem label="最后登录时间:" :label-width="90">
-          <DatePicker @on-change="handleLoginedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择最后登录时间"></DatePicker>
+          <DatePicker @on-change="handleLoginedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placeholder="选择最后登录时间"></DatePicker>
         </FormItem>
         <FormItem label="创建时间:" :label-width="70">
-          <DatePicker @on-change="handleCreatedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择创建时间"></DatePicker>
+          <DatePicker @on-change="handleCreatedAtChange" :options="dateOptions" format="yyyy-MM-dd" type="daterange" placeholder="选择创建时间"></DatePicker>
         </FormItem>
         <FormItem :label-width="0">
           <Button type="primary" icon="ios-search" @click="listLoad(true)">查询</Button>
@@ -36,64 +36,64 @@
           <span v-else>客户端注册</span>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
+      <Page :total="summary.totalNum" :current="summary.pageIndex" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page"/>
     </Card>
   </div>
 </template>
 
 <script>
-import { list } from "@/api/user";
+import { list } from '@/api/user'
 
 export default {
-  data() {
+  data () {
     return {
       dateOptions: {
-        disabledDate(date) {
-          return date && date.valueOf() > Date.now();
+        disabledDate (date) {
+          return date && date.valueOf() > Date.now()
         }
       },
       columns: [
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           width: 70,
-          sortable: "custom",
-          sortType: "desc"
+          sortable: 'custom',
+          sortType: 'desc'
         },
         {
-          title: "昵称",
-          key: "nickName"
+          title: '昵称',
+          key: 'nickName'
         },
         {
-          title: "姓名",
-          key: "realName"
+          title: '姓名',
+          key: 'realName'
         },
         {
-          title: "头像",
-          slot: "avatarUrl",
-          align: "center"
+          title: '头像',
+          slot: 'avatarUrl',
+          align: 'center'
         },
         {
-          title: "手机号",
-          key: "mobile"
+          title: '手机号',
+          key: 'mobile'
         },
         {
-          title: "来源",
-          slot: "source",
+          title: '来源',
+          slot: 'source'
         },
         {
-          title: "状态",
-          slot: "status",
+          title: '状态',
+          slot: 'status'
         },
         {
-          title: "最后登录时间",
-          key: "loginedAt",
-          sortable: "custom"
+          title: '最后登录时间',
+          key: 'loginedAt',
+          sortable: 'custom'
         },
         {
-          title: "创建时间",
-          key: "createdAt",
-          sortable: "custom"
+          title: '创建时间',
+          key: 'createdAt',
+          sortable: 'custom'
         }
       ],
       searchItem: {
@@ -102,42 +102,42 @@ export default {
       },
       summary: {},
       tableData: []
-    };
+    }
   },
-  mounted() {
+  mounted () {
     this.listLoad(true)
   },
   methods: {
-    handleLoginedAtChange(date) {
+    handleLoginedAtChange (date) {
       this.searchItem.loginedAtAfter = date[0]
       this.searchItem.loginedAtBefore = date[1]
     },
-    handleCreatedAtChange(date) {
+    handleCreatedAtChange (date) {
       this.searchItem.createdAtAfter = date[0]
       this.searchItem.createdAtBefore = date[1]
     },
-    handleSortChange(data) {
+    handleSortChange (data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
       this.listLoad(false)
     },
-    pageIndexChange(pageIndex) {
+    pageIndexChange (pageIndex) {
       this.searchItem.pageIndex = pageIndex
       this.listLoad(false)
     },
-    pageSizeChange(pageSize) {
+    pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
       this.listLoad(false)
     },
-    listLoad(status) {
+    listLoad (status) {
       if (status) this.searchItem.pageIndex = 1
       list(this.searchItem).then(res => {
         this.summary = res.data.result.summary
         this.tableData = res.data.result.list
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style>

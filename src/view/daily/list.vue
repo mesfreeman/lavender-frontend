@@ -21,7 +21,7 @@
         </template>
         <template slot-scope="{row}" slot="mediaId">
           <Tag v-if="row.mediaId" color="green">已同步</Tag>
-          <Tag v-else color="red">未同步</Tag>
+          <Tag v-else color="orange">未同步</Tag>
         </template>
         <template slot-scope="{row, index}" slot="action">
           <ButtonGroup shape="circle">
@@ -32,7 +32,7 @@
           </ButtonGroup>
         </template>
       </Table>
-      <Page :total="summary.totalNum" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
+      <Page :total="summary.totalNum" :current="summary.pageIndex" show-sizer show-total @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" class="page" />
     </Card>
     <Modal class="image" v-model="visible" :closable="false" footer-hide>
         <img :src="imgUrl" v-if="visible" style="width: 100%;">
@@ -55,7 +55,7 @@ export default {
           key: 'id',
           width: 70,
           sortable: 'custom',
-          sortType: "desc"
+          sortType: 'desc'
         },
         {
           title: '标题',
@@ -107,21 +107,21 @@ export default {
     }
   },
   mounted () {
-    this.listLoad (true)
+    this.listLoad(true)
   },
   methods: {
     handleSortChange (data) {
       this.searchItem.orderBy = data.key
       this.searchItem.orderDirection = data.order
-      this.listLoad (false)
+      this.listLoad(false)
     },
     pageIndexChange (pageIndex) {
       this.searchItem.pageIndex = pageIndex
-      this.listLoad (false)
+      this.listLoad(false)
     },
     pageSizeChange (pageSize) {
       this.searchItem.pageSize = pageSize
-      this.listLoad (false)
+      this.listLoad(false)
     },
     imageShow (imgUrl) {
       this.imgUrl = imgUrl
@@ -144,7 +144,7 @@ export default {
         this.tableData[index].mediaId = res.data.result.mediaId
         this.$set(this.loading1, index, false)
       }).catch(err => {
-        this.$set(this.loading1, index, false)
+        if (err) this.$set(this.loading1, index, false)
       })
     }
   }
